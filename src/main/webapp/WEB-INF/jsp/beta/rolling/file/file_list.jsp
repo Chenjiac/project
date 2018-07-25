@@ -63,7 +63,7 @@
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
-								<%--<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>--%>
+								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
 								<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i></a></td></c:if>
 							</tr>
 						</table>
@@ -170,7 +170,7 @@
 															</li>
 															</c:if>
 															<li>
-																<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}');" class="tooltip-success" data-rel="tooltip" title="预览">
+																<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}','${var.ZERO}');" class="tooltip-success" data-rel="tooltip" title="预览">
 																	<span class="green">
 																		<i class="ace-icon fa fa-eye pink"></i>
 																	</span>
@@ -407,9 +407,15 @@
 		};
 
 		//预览pdf文件
-        function openPDF(num,sn) {
+        function openPDF(num,sn,x) {
 
-            window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
+            if(x == 0){
+                window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
+			}else {
+                window.open('<%=basePath%>paper/findByNum.do?LIBRARY_NUM=' + num);
+			}
+
+
 
 //            var url="/uploadFiles/uploadFile/"+p;
 //            window.open("pdfjs/web/viewer.html?file="+url);
