@@ -170,7 +170,7 @@
 															</li>
 															</c:if>
 															<li>
-																<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}','${var.ZERO}');" class="tooltip-success" data-rel="tooltip" title="预览">
+																<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}');" class="tooltip-success" data-rel="tooltip" title="预览">
 																	<span class="green">
 																		<i class="ace-icon fa fa-eye pink"></i>
 																	</span>
@@ -407,15 +407,9 @@
 		};
 
 		//预览pdf文件
-        function openPDF(num,sn,x) {
+        function openPDF(num,sn) {
 
-            if(x == 0){
                 window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
-			}else {
-                window.open('<%=basePath%>paper/findByNum.do?LIBRARY_NUM=' + num);
-			}
-
-
 
 //            var url="/uploadFiles/uploadFile/"+p;
 //            window.open("pdfjs/web/viewer.html?file="+url);

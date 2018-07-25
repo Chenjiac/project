@@ -154,7 +154,7 @@
                                                             <%--</a>--%>
                                                             <%--</c:if>--%>
                                                             <a href="javascript:void(0);" onclick="detail('${var.ID}','${var.ZERO}')" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:yellowgreen;font-size: 13px; color: white;line-height:26px;text-align: center" title="详情" >详情</a>
-                                                            <a href="javascript:void(0);" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}');" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:blueviolet;font-size: 13px; color: white;line-height:26px;text-align: center" title="预览" >预览</a>
+                                                            <a href="javascript:void(0);" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}','${var.ZERO}');" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:blueviolet;font-size: 13px; color: white;line-height:26px;text-align: center" title="预览" >预览</a>
                                                             <%--</div>--%>
                                                             <%--<div class="hidden-md hidden-lg">--%>
                                                         <%--<div class="inline pos-rel">--%>
@@ -362,9 +362,15 @@
     }
 
     //预览pdf文件
-    function openPDF(num,sn) {
+    function openPDF(num,sn,x) {
 
-        window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
+        if(x == 0){
+            window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
+        }else {
+            window.open('<%=basePath%>paper/findByNum.do?LIBRARY_NUM=' + num);
+        }
+
+
 
 //            var url="/uploadFiles/uploadFile/"+p;
 //            window.open("pdfjs/web/viewer.html?file="+url);
