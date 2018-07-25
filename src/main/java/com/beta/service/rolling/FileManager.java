@@ -43,10 +43,10 @@ public interface FileManager{
 	public List<PageData> listW(Page page) throws Exception;
 
 	/**列表(全部)
-	 * @param pd
+	 * @param page
 	 * @throws Exception
 	 */
-	public List<PageData> listAll(PageData pd)throws Exception;
+	public List<PageData> listAll(PageData page)throws Exception;
 	
 	/**通过id获取数据
 	 * @param pd

@@ -214,7 +214,7 @@ public class FileController extends BaseController {
 		pd = this.getPageData();
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		List<String> titles = new ArrayList<String>();
-		titles.add("文件id");	//1
+//		titles.add("文件id");	//1
 		titles.add("全宗号");	//2
 		titles.add("目录号");	//3
 		titles.add("案卷号");	//4
@@ -236,22 +236,22 @@ public class FileController extends BaseController {
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
-			vpd.put("var2", varOList.get(i).getString("GENERAL_ARCHIVE"));	    //2
-			vpd.put("var3", varOList.get(i).getString("CATALOG_NUMBER"));	    //3
-			vpd.put("var4", varOList.get(i).getString("VOLUME_SN"));	    //4
-			vpd.put("var5", varOList.get(i).getString("VOLUME_NUM"));	    //5
-			vpd.put("var6", varOList.get(i).get("FILE_SN").toString());	//6
-			vpd.put("var7", varOList.get(i).getString("FILE_NAME"));	    //7
-			vpd.put("var8", varOList.get(i).getString("FILE_NUM"));	    //8
-			vpd.put("var9", varOList.get(i).getString("FILE_RESPONSIBLER"));	    //9
-			vpd.put("var10", varOList.get(i).getString("START_PAGE"));	    //10
-			vpd.put("var11", varOList.get(i).get("FILE_PAGE").toString());	//11
-			vpd.put("var12", varOList.get(i).getString("FILE_DATE"));	    //12
-			vpd.put("var13", varOList.get(i).getString("FILE_YEAR"));	    //13
-			vpd.put("var14", varOList.get(i).getString("STORAGE_TIME"));	    //14
-			vpd.put("var15", varOList.get(i).getString("SECRET_LEVEL"));	    //15
-			vpd.put("var16", varOList.get(i).getString("COMPANY_NAME"));	    //16
-			vpd.put("var17", varOList.get(i).getString("FILE_DESCRIPTION"));	    //17
+			vpd.put("var1", varOList.get(i).getString("GENERAL_ARCHIVE"));	    //全宗号
+			vpd.put("var2", varOList.get(i).getString("CATALOG_NUMBER"));	    //目录号
+			vpd.put("var3", varOList.get(i).getString("VOLUME_SN"));	    	//案卷号
+			vpd.put("var4", varOList.get(i).getString("VOLUME_NUM"));	    	//档号
+			vpd.put("var5", varOList.get(i).get("FILE_SN").toString());				//顺序号
+			vpd.put("var6", varOList.get(i).getString("FILE_NAME"));	   	 	//题名
+			vpd.put("var7", varOList.get(i).getString("FILE_NUM"));	    		//文号
+			vpd.put("var8", varOList.get(i).getString("FILE_RESPONSIBLER"));	//责任者
+			vpd.put("var9", varOList.get(i).getString("START_PAGE"));	    	//页号
+			vpd.put("var10", varOList.get(i).get("FILE_PAGE").toString());			//页数
+			vpd.put("var11", varOList.get(i).getString("FILE_DATE"));	    	//日期
+			vpd.put("var12", varOList.get(i).getString("STORAGE_YEAR"));	    //归档年度
+			vpd.put("var13", varOList.get(i).getString("STORAGE_TIME"));	    //保管期限
+			vpd.put("var14", varOList.get(i).getString("SECRET_LEVEL"));	    //密级
+			vpd.put("var15", varOList.get(i).getString("COMPANY_NAME"));	    //保管单位名称
+			vpd.put("var16", varOList.get(i).getString("FILE_DESCRIPTION"));	//备注
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
