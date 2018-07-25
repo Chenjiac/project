@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FileMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		BETA_ROLLING_FILE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		FILE_ID,
+		GENERAL_ARCHIVE,	
+		CATALOG_NUMBER,	
+		VOLUME_SN,	
+		VOLUME_NUM,	
+		FILE_SN,	
+		FILE_NAME,
+		FILE_NUM,
+		FILE_RESPONSIBLER,
+		START_PAGE,	
+		FILE_PAGE,	
+		FILE_DATE,	
+		STORAGE_YEAR,
+		STORAGE_TIME,	
+		SECRET_LEVEL,	
+		COMPANY_NAME,	
+		FILE_DESCRIPTION,
+		ZERO
+
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FILE_ID},	
+		#{GENERAL_ARCHIVE},	
+		#{CATALOG_NUMBER},	
+		#{VOLUME_SN},	
+		#{VOLUME_NUM},	
+		#{FILE_SN},	
+		#{FILE_NAME},	
+		#{FILE_NUM},	
+		#{FILE_RESPONSIBLER},	
+		#{START_PAGE},	
+		#{FILE_PAGE},	
+		#{FILE_DATE},	
+		#{STORAGE_YEAR},
+		#{STORAGE_TIME},	
+		#{SECRET_LEVEL},	
+		#{COMPANY_NAME},	
+		#{FILE_DESCRIPTION},
+		#{ZERO}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		GENERAL_ARCHIVE,
+		CATALOG_NUMBER,
+		VOLUME_SN,
+		VOLUME_NUM,
+		FILE_SN,
+		FILE_NAME,
+		FILE_NUM,
+		FILE_RESPONSIBLER,
+		START_PAGE,
+		FILE_PAGE,
+		FILE_DATE,
+		STORAGE_YEAR,
+		STORAGE_TIME,
+		SECRET_LEVEL,
+		FILE_DESCRIPTION
+		) values (
+		#{GENERAL_ARCHIVE},
+		#{CATALOG_NUMBER},
+		#{VOLUME_SN},
+		#{VOLUME_NUM},
+		#{FILE_SN},
+		#{FILE_NAME},
+		#{FILE_NUM},
+		#{FILE_RESPONSIBLER},
+		#{START_PAGE},
+		#{FILE_PAGE},
+		#{FILE_DATE},
+		#{STORAGE_YEAR},
+		#{STORAGE_TIME},
+		#{SECRET_LEVEL},
+		#{FILE_DESCRIPTION}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			FILE_ID = #{FILE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FILE_ID = #{FILE_ID},
+			GENERAL_ARCHIVE = #{GENERAL_ARCHIVE},
+			CATALOG_NUMBER = #{CATALOG_NUMBER},
+			VOLUME_SN = #{VOLUME_SN},
+			VOLUME_NUM = #{VOLUME_NUM},
+			FILE_SN = #{FILE_SN},
+			FILE_NAME = #{FILE_NAME},
+			FILE_NUM = #{FILE_NUM},
+			FILE_RESPONSIBLER = #{FILE_RESPONSIBLER},
+			START_PAGE = #{START_PAGE},
+			FILE_PAGE = #{FILE_PAGE},
+			FILE_DATE = #{FILE_DATE},
+			STORAGE_YEAR = #{STORAGE_YEAR},
+			STORAGE_TIME = #{STORAGE_TIME},
+			SECRET_LEVEL = #{SECRET_LEVEL},
+			FILE_DESCRIPTION = #{FILE_DESCRIPTION}
+		where 
+		FILE_ID = #{FILE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			FILE_ID = #{FILE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		FILE_ID AS ID,
+		GENERAL_ARCHIVE,
+		CATALOG_NUMBER,
+		VOLUME_SN,
+		VOLUME_NUM,
+		FILE_SN,
+		FILE_NAME AS NAME,
+		FILE_NUM AS NUM,
+		FILE_RESPONSIBLER AS RES,
+		START_PAGE,
+		FILE_PAGE,
+		FILE_DATE,
+		STORAGE_YEAR,
+		STORAGE_TIME,
+		SECRET_LEVEL,
+		COMPANY_NAME,
+		FILE_DESCRIPTION AS DES,
+		ZERO
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.NAME!= null and pd.NAME != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件  -->
+			FILE_NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+			)
+		</if>
+		<!--<if test="pd.VOLUME_ID!= null and pd.VOLUME_ID != ''">&lt;!&ndash; 关键词检索 &ndash;&gt;-->
+			<!--and-->
+			<!--(-->
+			<!--&lt;!&ndash;	根据需求自己加检索条件   &ndash;&gt;-->
+
+			<!--VOLUME_ID = #{pd.VOLUME_ID}-->
+
+			<!--)-->
+		<!--</if>-->
+		<!--<if test="pd.ID!= null and pd.ID != ''">&lt;!&ndash; 关键词检索 &ndash;&gt;-->
+			<!--and-->
+			<!--(-->
+			<!--&lt;!&ndash;	根据需求自己加检索条件   &ndash;&gt;-->
+
+			<!--FILE_ID = #{pd.ID}-->
+
+			<!--)-->
+		<!--</if>-->
+		<if test="pd.STORAGE_YEAR!= null and pd.STORAGE_YEAR != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件   -->
+
+			STORAGE_YEAR =  #{pd.STORAGE_YEAR}
+
+			)
+		</if>
+	</select>
+
+	<!--将两个表连接成一个表-->
+	<select id="datalistPageSearch" parameterType="page" resultType="pd">
+		SELECT
+		FILE_ID AS ID,
+		GENERAL_ARCHIVE,
+		FILE_NUM AS NUM,
+		FILE_NAME AS NAME,
+		FILE_RESPONSIBLER AS RES,
+		FILE_DESCRIPTION AS DES,
+		STORAGE_YEAR,
+		ZERO
+		FROM BETA_ROLLING_FILE
+		where 1=1
+		<!--<if test="pd.ID!= null and pd.ID != ''">&lt;!&ndash; 关键词检索 &ndash;&gt;-->
+			<!--and-->
+			<!--(-->
+			<!--FILE_ID =#{pd.ID}-->
+			<!--)-->
+		<!--</if>-->
+		<if test="pd.NAME!= null and pd.NAME != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件-->
+			FILE_NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+			)
+		</if>
+		<if test="pd.STORAGE_YEAR!= null and pd.STORAGE_YEAR != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件-->
+			STORAGE_YEAR LIKE CONCAT(CONCAT('%', #{pd.STORAGE_YEAR}),'%')
+
+			)
+		</if>
+		UNION ALL
+		SELECT
+		PAPER_ID AS ID,
+		GENERAL_ARCHIVE,
+		PAPER_NUM AS NUM,
+		PAPER_NAME AS NAME,
+		PAPER_RESPONSIBLER AS RES,
+		PAPER_DESCRIPTION AS DES,
+		STORAGE_YEAR,
+		ZERO
+		FROM BETA_UNROLLING_PAPER
+		where 1=1
+		<if test="pd.NAME!= null and pd.NAME != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件-->
+			PAPER_NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+			)
+		</if>
+		<if test="pd.STORAGE_YEAR!= null and pd.STORAGE_YEAR != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件-->
+			STORAGE_YEAR LIKE CONCAT(CONCAT('%', #{pd.STORAGE_YEAR}),'%')
+
+			)
+		</if>
+	</select>
+
+
+	<!--查找num-->
+	<select id="findByNum" parameterType="pd" resultType="pd">
+		SELECT
+		*
+		FROM
+		BETA_ROLLING_FILE
+		where 1=1
+		<if test="VOLUME_NUM != null and VOLUME_NUM != ''">
+			AND
+			(
+			VOLUME_NUM = #{VOLUME_NUM}
+			)
+		</if>
+	</select>
+
+	<!--查找volume_num和file_sn-->
+	<select id="findByName" parameterType="pd" resultType="pd" >
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		VOLUME_NUM = #{VOLUME_NUM}
+		AND
+		FILE_SN = #{FILE_SN}
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			FILE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- fh313596790qq(青苔) -->
+</mapper>

@@ -1,0 +1,16 @@
+<!-- 利用openOffice+jodConverter转换成PDF -->  
+    <dependency>  
+        <groupId>org.artofsolving.jodconverter</groupId>  
+        <artifactId>jodconverter-core</artifactId>  
+        <version>3.0-beta-4</version>  
+    </dependency>  
+    <dependency>  
+        <groupId>org.openoffice</groupId>  
+        <artifactId>juh</artifactId>  
+        <version>3.2.1</version>  
+    </dependency>  
+    <dependency>  
+        <groupId>org.openoffice</groupId>  
+        <artifactId>unoil</artifactId>  
+        <version>3.2.1</version>  
+    </dependency> 

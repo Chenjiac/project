@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="button" onclick="openPDF()" value="点我"/>
+<script>
+    function openPDF(){
+        var url="/wendang.pdf";
+        window.open("pdfjs/web/viewer.html?file="+url);
+    }
+</script>
+</body>
+</html>
