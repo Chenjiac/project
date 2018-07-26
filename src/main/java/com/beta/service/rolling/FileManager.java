@@ -67,6 +67,8 @@ public interface FileManager{
 	 * @throws Exception
 	 */
 	public PageData findByFName(PageData pd)throws Exception;
+
+
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception

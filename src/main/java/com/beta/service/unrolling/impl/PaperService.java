@@ -71,7 +71,16 @@ public class PaperService implements PaperManager {
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("PaperMapper.findById", pd);
 	}
-	
+
+	/**通过Library_num获取数据
+	 * @param pd
+	 *@throws Exception
+	 */
+	public PageData findByPNum(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("PaperMapper.findByNUM",pd);
+	}
+
+
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception
@@ -79,6 +88,7 @@ public class PaperService implements PaperManager {
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
 		dao.delete("PaperMapper.deleteAll", ArrayDATA_IDS);
 	}
+
 	
 }
 

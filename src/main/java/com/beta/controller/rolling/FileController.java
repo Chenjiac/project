@@ -55,7 +55,7 @@ public class FileController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("FILE_ID", this.get32UUID());	//主键
+//		pd.put("FILE_ID", this.get32UUID());	//主键
 		fileService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");

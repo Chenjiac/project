@@ -88,9 +88,9 @@
                                     <%--<th class="center">案卷号</th>--%>
                                     <%--<th class="center">档号</th>--%>
                                     <%--<th class="center">顺序号</th>--%>
-                                    <th class="center">题名</th>
+                                    <th class="center" style="width: 30%">题名</th>
                                     <th class="center">文号</th>
-                                    <th class="center">责任者</th>
+                                    <th class="center" style="width: 20%">责任者</th>
                                     <%--<th class="center">页号</th>--%>
                                     <%--<th class="center">页数</th>--%>
                                     <%--<th class="center">日期</th>--%>
@@ -154,6 +154,7 @@
                                                             <%--</a>--%>
                                                             <%--</c:if>--%>
                                                             <a href="javascript:void(0);" onclick="detail('${var.ID}','${var.ZERO}')" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:yellowgreen;font-size: 13px; color: white;line-height:26px;text-align: center" title="详情" >详情</a>
+                                                            <a href="javascript:void(0);" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}','${var.ZERO}');" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:blueviolet;font-size: 13px; color: white;line-height:26px;text-align: center" title="预览" >预览</a>
                                                             <%--</div>--%>
                                                             <%--<div class="hidden-md hidden-lg">--%>
                                                         <%--<div class="inline pos-rel">--%>
@@ -327,8 +328,8 @@
             diag.Drag = true;
             diag.Title = "详情";
             diag.URL = '<%=basePath%>file/detail.do?FILE_ID=' + Id;
-            diag.Width = 450;
-            diag.Height = 355;
+            diag.Width = 500;
+            diag.Height = 550;
             diag.Modal = true;				//有无遮罩窗口
             diag.ShowMaxButton = true;	//最大化按钮
             diag.ShowMinButton = true;		//最小化按钮
@@ -345,8 +346,8 @@
             diag.Drag = true;
             diag.Title = "详情";
             diag.URL = '<%=basePath%>paper/detail.do?PAPER_ID=' + Id;
-            diag.Width = 450;
-            diag.Height = 355;
+            diag.Width = 500;
+            diag.Height = 550;
             diag.Modal = true;				//有无遮罩窗口
             diag.ShowMaxButton = true;	//最大化按钮
             diag.ShowMinButton = true;		//最小化按钮
@@ -360,7 +361,18 @@
         }
     }
 
+    //预览pdf文件
+    function openPDF(num,sn,x) {
 
+        if(x == 0){
+            window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
+        }else {
+            var url="/uploadFiles/uploadFile/"+ num +".pdf";
+            window.open("pdfjs/web/viewer.html?file="+url);
+        }
+//            var url="/uploadFiles/uploadFile/"+p;
+//            window.open("pdfjs/web/viewer.html?file="+url);
+    }
 
     //导出excel
     function toExcel(){

@@ -1,6 +1,7 @@
 package com.beta.service.finance.impl;
 
-import com.beta.service.finance.Finance_AttachmentManager;
+import com.beta.service.finance.FinanceAttachmentManager;
+import com.beta.service.finance.FinanceAttachmentManager;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
 import com.fh.util.PageData;
@@ -16,8 +17,8 @@ import java.util.List;
  * 创建时间：2018-06-10
  * @version
  */
-@Service("finance_attachmentService")
-public class Finance_AttachmentService implements Finance_AttachmentManager {
+@Service("financeattachmentService")
+public class FinanceAttachmentService implements FinanceAttachmentManager {
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;

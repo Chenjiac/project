@@ -11,7 +11,7 @@ import java.util.List;
  * 创建时间：2018-06-10
  * @version
  */
-public interface Finance_AttachmentManager {
+public interface FinanceAttachmentManager {
 
 	/**新增
 	 * @param pd

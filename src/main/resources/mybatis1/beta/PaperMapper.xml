@@ -16,7 +16,7 @@
 		ROOM_CODE,	
 		LIBRARY_CODE,	
 		STORAGE_YEAR,	
-		SECTION_ID,	
+		SECTION,
 		STORAGE_TIME,	
 		PAPER_NUM,
 		PAPER_NAME,
@@ -38,7 +38,7 @@
 		#{ROOM_CODE},	
 		#{LIBRARY_CODE},	
 		#{STORAGE_YEAR},	
-		#{SECTION_ID},	
+		#{SECTION},
 		#{STORAGE_TIME},	
 		#{PAPER_NUM},	
 		#{PAPER_NAME},	
@@ -62,7 +62,7 @@
 		ROOM_CODE,
 		LIBRARY_CODE,
 		STORAGE_YEAR,
-		SECTION_ID,
+		SECTION,
 		STORAGE_TIME,
 		PAPER_NUM,
 		PAPER_NAME,
@@ -70,7 +70,6 @@
 		PAPER_DATE,
 		PAPER_PAGE,
 		SECRET_LEVEL,
-		COMPANY_NAME,
 		PAPER_DESCRIPTION
 		) values (
 		#{GENERAL_ARCHIVE},
@@ -79,7 +78,7 @@
 		#{ROOM_CODE},
 		#{LIBRARY_CODE},
 		#{STORAGE_YEAR},
-		#{SECTION_ID},
+		#{SECTION},
 		#{STORAGE_TIME},
 		#{PAPER_NUM},
 		#{PAPER_NAME},
@@ -87,7 +86,6 @@
 		#{PAPER_DATE},
 		#{PAPER_PAGE},
 		#{SECRET_LEVEL},
-		#{COMPANY_NAME},
 		#{PAPER_DESCRIPTION}
 		)
 	</insert>
@@ -112,7 +110,7 @@
 			ROOM_CODE = #{ROOM_CODE},
 			LIBRARY_CODE = #{LIBRARY_CODE},
 			STORAGE_YEAR = #{STORAGE_YEAR},
-			SECTION_ID = #{SECTION_ID},
+			SECTION = #{SECTION},
 			STORAGE_TIME = #{STORAGE_TIME},
 			PAPER_NUM = #{PAPER_NUM},
 			PAPER_NAME = #{PAPER_NAME},
@@ -134,7 +132,18 @@
 		where
 		PAPER_ID = #{PAPER_ID}
 	</select>
-	
+
+	<!-- 通过Library_num获取数据 -->
+	<select id="findByNUM" parameterType="pd" resultType="pd">
+		SELECT
+		<include refid="Field"></include>
+		FROM
+		<include refid="tableName"></include>
+		WHERE
+		LIBRARY_NUM = #{LIBRARY_NUM}
+	</select>
+
+
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
@@ -145,7 +154,7 @@
 		ROOM_CODE,
 		LIBRARY_CODE,
 		STORAGE_YEAR,
-		BETA_UNROLLING_PAPER.SECTION_ID,
+		SECTION,
 		STORAGE_TIME,
 		PAPER_NUM AS NUM,
 		PAPER_NAME AS NAME,
@@ -155,11 +164,9 @@
 		SECRET_LEVEL,
 		COMPANY_NAME,
 		PAPER_DESCRIPTION AS DES,
-		BETA_SECTION.SECTION_NAME,
 		ZERO
 		from 
 		BETA_UNROLLING_PAPER
-		LEFT JOIN BETA_SECTION ON BETA_UNROLLING_PAPER.SECTION_ID = BETA_SECTION.SECTION_ID
 		where 1=1
 
 		<if test="pd.NAME!= null and pd.NAME != ''"><!-- 关键词检索 -->

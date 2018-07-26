@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="finance/list.do" method="post" name="Form" id="Form">
+						<form action="finance/list.do?currentPage=${page.currentPage}" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -42,20 +42,21 @@
 										</span>
 									</div>
 								</td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
-								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
-								</td>
+								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>--%>
+								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>--%>
+								<%--<td style="vertical-align:top;padding-left:2px;">--%>
+								 	<%--<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">--%>
+									<%--<option value=""></option>--%>
+									<%--<option value="">全部</option>--%>
+									<%--<option value="">1</option>--%>
+									<%--<option value="">2</option>--%>
+								  	<%--</select>--%>
+								<%--</td>--%>
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
 								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+								<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i></a></td></c:if>
 							</tr>
 						</table>
 						<!-- 检索  -->
@@ -70,16 +71,16 @@
 									<%--<th class="center">财务id</th>--%>
 									<th class="center">全宗号</th>
 									<th class="center">目录号</th>
-									<th class="center">案卷号</th>
-									<th class="center">会计核算材料名称</th>
-									<th class="center">会计年度</th>
-									<th class="center">单位名称</th>
-									<th class="center">保管期限</th>
-									<th class="center">归档号</th>
+									<th class="center">类别</th>
+									<th class="center">档号</th>
+									<th class="center">题名</th>
+									<th class="center">起止时间</th>
+									<th class="center">归档年度</th>
 									<th class="center">页数</th>
-									<th class="center">主管</th>
-									<th class="center">记账</th>
-									<th class="center">装订人</th>
+									<th class="center">保管期限</th>
+									<th class="center">密级</th>
+									<th class="center">保管单位名称</th>
+									<th class="center">备注</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -98,16 +99,16 @@
 											<%--<td class='center'>${var.FINANCE_ID}</td>--%>
 											<td class='center'>${var.GENERAL_ARCHIVE}</td>
 											<td class='center'>${var.CATALOG_NUMBER}</td>
+											<td class='center'>${var.CATEGORY}</td>
 											<td class='center'>${var.VOLUME_NUM}</td>
-											<td class='center'>${var.FINANCE_NAME}</td>
-											<td class='center'>${var.FINANCE_YEAR}</td>
-											<td class='center'>${var.COMPANY_NAME}</td>
+											<td class='center'>${var.VOLUME_NAME}</td>
+											<td class='center'>${var.VOLUME_START_END_TIME}</td>
+											<td class='center'>${var.VOLUME_YEAR}</td>
+											<td class='center'>${var.VOLUME_PAGES}</td>
 											<td class='center'>${var.STORAGE_TIME}</td>
-											<td class='center'>${var.ARCHIVE_NUM}</td>
-											<td class='center'>${var.PAGES}</td>
-											<td class='center'>${var.SUPERVISOR}</td>
-											<td class='center'>${var.BOOKKEEPER}</td>
-											<td class='center'>${var.BINDING_PERSON}</td>
+											<td class='center'>${var.SECRET_LEVEL}</td>
+											<td class='center'>${var.COMPANY_NAME}</td>
+											<td class='center'>${var.DESCRIPTION}</td>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
@@ -123,7 +124,7 @@
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 													</c:if>
-													<a href="finance_attachment/list.do?FINANCE_ID=${var.FINANCE_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>
+													<%--<a href="finance_attachment/list.do?FINANCE_ID=${var.FINANCE_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>--%>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -281,8 +282,8 @@
 			 diag.Drag=true;
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>finance/goAdd.do';
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 550;
+			 diag.Height = 455;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -319,8 +320,8 @@
 			 diag.Drag=true;
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>finance/goEdit.do?FINANCE_ID='+Id;
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 550;
+			 diag.Height = 455;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
@@ -383,6 +384,30 @@
 		function toExcel(){
 			window.location.href='<%=basePath%>finance/excel.do';
 		}
+
+        //打开上传excel页面
+        function fromExcel(){
+            top.jzts();
+            var diag = new top.Dialog();
+            diag.Drag=true;
+            diag.Title ="EXCEL 导入到数据库";
+            diag.URL = '<%=basePath%>finance/goUploadExcel.do';
+            diag.Width = 300;
+            diag.Height = 150;
+            diag.CancelEvent = function(){ //关闭事件
+                if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+                    if('${page.currentPage}' == '0'){
+                        top.jzts();
+                        setTimeout("self.location.reload()",100);
+                    }else{
+                        nextPage(${page.currentPage});
+                    }
+                }
+                diag.close();
+            };
+            diag.show();
+        }
+
 	</script>
 
 

@@ -11,7 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.beta.service.unrolling.Unrolling_AttachmentManager;
+import com.beta.service.unrolling.UnrollingAttachmentManager;
 import com.fh.util.*;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -30,12 +30,12 @@ import com.fh.entity.Page;
  * 创建时间：2018-07-06
  */
 @Controller
-@RequestMapping(value="/unrolling_attachment")
-public class Unrolling_AttachmentController extends BaseController {
+@RequestMapping(value="/unrollingattachment")
+public class UnrollingAttachmentController extends BaseController {
 	
 	String menuUrl = "unrolling_attachment/list.do"; //菜单地址(权限用)
-	@Resource(name="unrolling_attachmentService")
-	private Unrolling_AttachmentManager unrolling_attachmentService;
+	@Resource(name="unrollingattachmentService")
+	private UnrollingAttachmentManager unrollingattachmentService;
 	
 	/**保存
 	 * @param
@@ -49,7 +49,7 @@ public class Unrolling_AttachmentController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ATTACHMENT_SIZE", FileUtil.getFilesize(PathUtil.getClasspath() + Const.FILEPATHFILEOA + pd.getString("ATTACHMENT_PATH")));	//文件大小
-		unrolling_attachmentService.save(pd);
+		unrollingattachmentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -65,8 +65,8 @@ public class Unrolling_AttachmentController extends BaseController {
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = unrolling_attachmentService.findById(pd);
-		unrolling_attachmentService.delete(pd);
+		pd = unrollingattachmentService.findById(pd);
+		unrollingattachmentService.delete(pd);
 		DelAllFile.delFolder(PathUtil.getClasspath()+ Const.FILEPATHFILEOA + pd.getString("UNROLLING_ATTACHMENT_PATH")); //删除文件
 		out.write("success");
 		out.close();
@@ -89,7 +89,7 @@ public class Unrolling_AttachmentController extends BaseController {
 //			pd.put("keywords", keywords.trim());
 //		}
 		page.setPd(pd);
-		List<PageData>	varList = unrolling_attachmentService.list(page);	//列出Unrolling_Attachment列表
+		List<PageData>	varList = unrollingattachmentService.list(page);	//列出Unrolling_Attachment列表
 		mv.setViewName("beta/unrolling/unrolling_attachment/unrolling_attachment_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
@@ -132,10 +132,10 @@ public class Unrolling_AttachmentController extends BaseController {
 			PageData fpd = new PageData();
 			for(int i=0;i<ArrayDATA_IDS.length;i++){
 				fpd.put("UNROLLING_ATTACHMENT_ID", ArrayDATA_IDS[i]);
-				fpd = unrolling_attachmentService.findById(fpd);
+				fpd = unrollingattachmentService.findById(fpd);
 				DelAllFile.delFolder(PathUtil.getClasspath()+ Const.FILEPATHFILEOA + fpd.getString("ATTACHMENT_PATH")); //删除物理文件
 			}
-			unrolling_attachmentService.deleteAll(ArrayDATA_IDS);		//删除数据库记录
+			unrollingattachmentService.deleteAll(ArrayDATA_IDS);		//删除数据库记录
 			pd.put("msg", "ok");
 		}else{
 			pd.put("msg", "no");
@@ -153,7 +153,7 @@ public class Unrolling_AttachmentController extends BaseController {
 	public void downExcel(HttpServletResponse response)throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = unrolling_attachmentService.findById(pd);
+		pd = unrollingattachmentService.findById(pd);
 		String fileName = pd.getString("ATTACHMENT_PATH");
 		FileDownload.fileDownload(response, PathUtil.getClasspath() + Const.FILEPATHFILEOA + fileName, pd.getString("ATTACHMENT_NAME")+fileName.substring(19, fileName.length()));
 	}

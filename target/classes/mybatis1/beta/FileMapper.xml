@@ -199,6 +199,8 @@
 		SELECT
 		FILE_ID AS ID,
 		GENERAL_ARCHIVE,
+		VOLUME_NUM,
+		FILE_SN,
 		FILE_NUM AS NUM,
 		FILE_NAME AS NAME,
 		FILE_RESPONSIBLER AS RES,
@@ -232,6 +234,8 @@
 		SELECT
 		PAPER_ID AS ID,
 		GENERAL_ARCHIVE,
+		library_num AS VOLUME_NUM,
+		1 AS FILE_SN,
 		PAPER_NUM AS NUM,
 		PAPER_NAME AS NAME,
 		PAPER_RESPONSIBLER AS RES,
@@ -286,7 +290,7 @@
 	</select>
 	
 	<!-- 列表(全部) -->
-	<select id="listAll" parameterType="pd" resultType="pd">
+	<select id="listAll" parameterType="page" resultType="pd">
 		select
 		<include refid="Field"></include>
 		from 

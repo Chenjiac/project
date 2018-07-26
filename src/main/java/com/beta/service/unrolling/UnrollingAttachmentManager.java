@@ -10,7 +10,7 @@ import com.fh.util.PageData;
  * 创建时间：2018-07-06
  * @version
  */
-public interface Unrolling_AttachmentManager{
+public interface UnrollingAttachmentManager{
 
 	/**新增
 	 * @param pd

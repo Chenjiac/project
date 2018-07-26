@@ -65,7 +65,7 @@
                                     <tr>
                                         <td style="width:75px;text-align: right;padding-top: 13px;">题名:</td>
                                         <td>
-                                            <input type="text" name="FILE_NAME" id="FILE_NAME" value="${pd.FILE_NAME}" maxlength="255"  style="width:98%;height: 100px"  readonly="readonly "/>
+                                            <textarea type="text" name="FILE_NAME" id="FILE_NAME" maxlength="255"  style="width:98%;height: 100px"  readonly="readonly ">${pd.FILE_NAME}</textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -86,7 +86,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width:75px;text-align: right;padding-top: 13px;">日期:</td>
-                                        <td><input class="span10 date-picker" name="FILE_DATE" id="FILE_DATE" value="${pd.FILE_DATE}" type="text" data-date-format="yyyymmdd" readonly="readonly" title="日期" style="width:98%;"/></td>
+                                        <td><input class="span10 date-picker" name="FILE_DATE" id="FILE_DATE" value="${pd.FILE_DATE}" type="text" data-date-format="yyyymmdd" disabled="disabled" title="日期" style="width:98%;"/></td>
                                     </tr>
                                     <tr>
                                         <td style="width:75px;text-align: right;padding-top: 13px;">归档年度:</td>
@@ -114,8 +114,8 @@
                                     <%--</tr>--%>
                                     <tr>
                                         <td style="text-align: center;" colspan="10">
-                                            <a class="btn btn-mini btn-primary" onclick="openPDF('${pd.VOLUME_NUM}','${pd.FILE_SN}');">预览</a>
-                                            <a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+                                            <%--<a class="btn btn-mini btn-primary" onclick="openPDF('${pd.VOLUME_NUM}','${pd.FILE_SN}');">预览</a>--%>
+                                            <%--<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>--%>
                                         </td>
                                     </tr>
                                 </table>
@@ -145,14 +145,14 @@
 <script type="text/javascript" src="static/js/jquery.tips.js"></script>
 <script type="text/javascript">
     $(top.hangge());
-    //预览pdf文件
-    function openPDF(num,sn) {
+    <%--//预览pdf文件--%>
+    <%--function openPDF(num,sn) {--%>
 
-        window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
+        <%--window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);--%>
 
-//            var url="/uploadFiles/uploadFile/"+p;
-//            window.open("pdfjs/web/viewer.html?file="+url);
-    }
+<%--//            var url="/uploadFiles/uploadFile/"+p;--%>
+<%--//            window.open("pdfjs/web/viewer.html?file="+url);--%>
+    <%--}--%>
 
     $(function() {
         //日期框

@@ -3,7 +3,8 @@ package com.beta.service.unrolling.impl;
 import java.util.List;
 import javax.annotation.Resource;
 
-import com.beta.service.unrolling.Unrolling_AttachmentManager;
+import com.beta.service.unrolling.UnrollingAttachmentManager;
+import com.beta.service.unrolling.UnrollingAttachmentManager;
 import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
@@ -16,8 +17,8 @@ import com.fh.util.PageData;
  * 创建时间：2018-07-06
  * @version
  */
-@Service("unrolling_attachmentService")
-public class Unrolling_AttachmentService implements Unrolling_AttachmentManager {
+@Service("unrollingattachmentService")
+public class UnrollingAttachmentService implements UnrollingAttachmentManager {
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;

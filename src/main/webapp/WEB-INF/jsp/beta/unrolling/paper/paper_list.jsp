@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="paper/list.do" method="post" name="Form" id="Form">
+						<form action="paper/list.do?currentPage=${page.currentPage}" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -64,7 +64,7 @@
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
 								<%--<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>--%>
-								<%--<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>--%>
+								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
 								<%--<td><span style="color: #00a0c6;font-size:14px;">&nbsp;&nbsp;导出到excel</span></td>--%>
 								<%--<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>--%>
 								<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i></a></td></c:if>
@@ -90,7 +90,7 @@
 									<th class="center">机构</th>
 									<th class="center">保管期限</th>
 									<th class="center">文号</th>
-									<th class="center">题名</th>
+									<th class="center" style="width: 15%">题名</th>
 									<th class="center">责任者</th>
 									<th class="center">日期</th>
 									<th class="center">页数</th>
@@ -119,7 +119,7 @@
 											<td class='center'>${var.ROOM_CODE}</td>
 											<td class='center'>${var.LIBRARY_CODE}</td>
 											<td class='center'>${var.STORAGE_YEAR}</td>
-											<td class='center'>${var.SECTION_NAME}</td>
+											<td class='center'>${var.SECTION}</td>
 											<td class='center'>${var.STORAGE_TIME}</td>
 											<td class='center'>${var.NUM}</td>
 											<td class='center'>${var.NAME}</td>
@@ -171,11 +171,15 @@
 															</li>
 															</c:if>
 															<li>
-																<a href="unrolling_attachment/list.do?PAPER_ID=${var.PAPER_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>
+																<a style="cursor:pointer;" onclick="openPDF('${var.LIBRARY_NUM}');" class="tooltip-success" data-rel="tooltip" title="预览">
+																	<span class="green">
+																		<i class="ace-icon fa fa-eye pink"></i>
+																	</span>
+																</a>
 															</li>
 														</ul>
 													</div>
-												</div>
+												<%--</div>--%>
 											</td>
 										</tr>
 									
@@ -304,8 +308,8 @@
 			 diag.Drag=true;
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>paper/goAdd.do';
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 550;
+			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -342,8 +346,8 @@
 			 diag.Drag=true;
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>paper/goEdit.do?PAPER_ID='+Id;
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 550;
+			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
@@ -355,6 +359,15 @@
 			 };
 			 diag.show();
 		}
+
+        //预览pdf文件
+        function openPDF(num) {
+
+            <%--window.open('<%=basePath%>paper/findByNum.do?LIBRARY_NUM=' + num);--%>
+//			alert(num);
+            var url="/uploadFiles/uploadFile/"+ num +".pdf";
+            window.open("pdfjs/web/viewer.html?file="+url);
+        }
 		
 		//批量操作
 		function makeAll(msg){

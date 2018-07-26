@@ -62,17 +62,20 @@
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">机构:</td>
 								<td>
-									<select class="chosen-select form-control" name="SECTION_ID" id="SECTION_ID" data-placeholder="请选择所属机构" style="vertical-align: top" style="width: 98%">
-										<option value=""></option>
-										<c:forEach items="${sectionList}" var="section">
-											<option value="${section.SECTION_ID }" <c:if test="${section.SECTION_ID == pd.SECTION_ID }">selected</c:if>>${section.SECTION_NAME }</option>
-										</c:forEach>
-									</select>
+									<input type="text" name="SECTION" id="SECTION" value="${pd.SECTION}" maxlength="4" placeholder="这里输入机构" title="机构" style="width:98%;"/>
 								</td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">保管期限:</td>
-								<td><input type="text" name="STORAGE_TIME" id="STORAGE_TIME" value="${pd.STORAGE_TIME}" maxlength="5" placeholder="这里输入保管期限" title="保管期限" style="width:98%;"/></td>
+								<td id="TIME">
+									<select class="chosen-select form-control" name="STORAGE_TIME" id="STORAGE_TIME" data-placeholder="请选择保管期限" style="vertical-align:top;" style="width:98%;" >
+										<option value=""></option>
+										<%--<c:forEach items="${roleList}" var="role">--%>
+										<option value="永久" <c:if test="${'永久'== pd.STORAGE_TIME }">selected</c:if>>永久</option>
+										<option value="长期" <c:if test="${'长期'== pd.STORAGE_TIME }">selected</c:if>>长期</option>
+										<%--</c:forEach>--%>
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">文号:</td>
@@ -80,7 +83,7 @@
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">题名:</td>
-								<td><input type="text" name="PAPER_NAME" id="PAPER_NAME" value="${pd.PAPER_NAME}" maxlength="64" placeholder="这里输入题名" title="题名" style="width:98%;"/></td>
+								<td><textarea type="text" name="PAPER_NAME" id="PAPER_NAME" maxlength="64" placeholder="这里输入题名" title="题名" style="width:98%;height: 90px">${pd.PAPER_NAME}</textarea></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">责任者:</td>
@@ -203,14 +206,14 @@
 				$("#STORAGE_YEAR").focus();
 			return false;
 			}
-			if($("#SECTION_NAME").val()==""){
-				$("#SECTION_NAME").tips({
+			if($("#SECTION").val()==""){
+				$("#SECTION").tips({
 					side:3,
 		            msg:'请输入机构',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#SECTION_NAME").focus();
+				$("#SECTION").focus();
 			return false;
 			}
 			if($("#STORAGE_TIME").val()==""){

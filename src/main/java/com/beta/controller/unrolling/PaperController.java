@@ -111,11 +111,16 @@ public class PaperController extends BaseController {
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
+		String currentPage = pd.getString("currentPage");
+		if (currentPage != null){
+			int curPage = Integer.parseInt(currentPage);
+			page.setCurrentPage(curPage);
+		}
 		List<PageData>	varList = paperService.list(page);	//列出Paper列表
-		List<PageData>  sectionList = sectionService.list(page);//列出Section列表
+//		List<PageData>  sectionList = sectionService.list(page);//列出Section列表
 		mv.setViewName("beta/unrolling/paper/paper_list");
 		mv.addObject("varList", varList);
-		mv.addObject("sectionList",sectionList);
+//		mv.addObject("sectionList",sectionList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -148,14 +153,30 @@ public class PaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = paperService.findById(pd);	//根据ID读取
-		List<PageData> sectionList = sectionService.list(page);
+//		List<PageData> sectionList = sectionService.list(page);
 		mv.setViewName("beta/unrolling/paper/paper_edit");
-		mv.addObject("sectionList",sectionList);
+//		mv.addObject("sectionList",sectionList);
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;
-	}	
-	
+	}
+
+	/**展示详情页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/detail")
+	public ModelAndView detail()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = paperService.findById(pd);
+		mv.setViewName("beta/unrolling/paper/paper_detail");
+		mv.addObject("msg","detail");
+		mv.addObject("pd",pd);
+		return mv;
+	}
+
 	 /**批量删除
 	 * @param
 	 * @throws Exception
@@ -195,10 +216,10 @@ public class PaperController extends BaseController {
 		pd = this.getPageData();
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		List<String> titles = new ArrayList<String>();
-		titles.add("文件id");	//1
+//		titles.add("文件id");	//1
 		titles.add("全宗号");	//2
 		titles.add("室编档号");	//3
-		titles.add("管编档号");	//4
+		titles.add("馆编档号");	//4
 		titles.add("室编件号");	//5
 		titles.add("馆编件号");	//6
 		titles.add("归档年度");	//7
@@ -217,23 +238,23 @@ public class PaperController extends BaseController {
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).get("UNROLLING_PAPER_ID").toString());	//1
-			vpd.put("var2", varOList.get(i).getString("GENERAL_ARCHIVE"));	    //2
-			vpd.put("var3", varOList.get(i).getString("ROOM_NUM"));	    //3
-			vpd.put("var4", varOList.get(i).getString("LIBRARY_NUM"));	    //4
-			vpd.put("var5", varOList.get(i).getString("ROOM_CODE"));	    //5
-			vpd.put("var6", varOList.get(i).getString("LIBRARY_CODE"));	    //6
-			vpd.put("var7", varOList.get(i).getString("STORAGE_YEAR"));	    //7
-			vpd.put("var8", varOList.get(i).get("SECTION_ID").toString());	//8
-			vpd.put("var9", varOList.get(i).getString("STORAGE_TIME"));	    //9
-			vpd.put("var10", varOList.get(i).getString("PAPER_NUM"));	    //10
-			vpd.put("var11", varOList.get(i).getString("PAPER_NAME"));	    //11
-			vpd.put("var12", varOList.get(i).getString("PAPER_RESPONSIBLER"));	    //12
-			vpd.put("var13", varOList.get(i).getString("PAPER_DATE"));	    //13
-			vpd.put("var14", varOList.get(i).get("PAPER_PAGE").toString());	//14
-			vpd.put("var15", varOList.get(i).getString("SECRET_LEVEL"));	    //15
-			vpd.put("var16", varOList.get(i).getString("COMPANY_NAME"));	    //16
-			vpd.put("var17", varOList.get(i).getString("PAPER_DESCRIPTION"));	    //17
+//			vpd.put("var1", varOList.get(i).get("UNROLLING_PAPER_ID").toString());	//1
+			vpd.put("var1", varOList.get(i).getString("GENERAL_ARCHIVE"));	    //2
+			vpd.put("var2", varOList.get(i).getString("ROOM_NUM"));	    //3
+			vpd.put("var3", varOList.get(i).getString("LIBRARY_NUM"));	    //4
+			vpd.put("var4", varOList.get(i).getString("ROOM_CODE"));	    //5
+			vpd.put("var5", varOList.get(i).getString("LIBRARY_CODE"));	    //6
+			vpd.put("var6", varOList.get(i).getString("STORAGE_YEAR"));	    //7
+			vpd.put("var7", varOList.get(i).get("SECTION").toString());	//8
+			vpd.put("var8", varOList.get(i).getString("STORAGE_TIME"));	    //9
+			vpd.put("var9", varOList.get(i).getString("PAPER_NUM"));	    //10
+			vpd.put("var10", varOList.get(i).getString("PAPER_NAME"));	    //11
+			vpd.put("var11", varOList.get(i).getString("PAPER_RESPONSIBLER"));	    //12
+			vpd.put("var12", varOList.get(i).getString("PAPER_DATE"));	    //13
+			vpd.put("var13", varOList.get(i).get("PAPER_PAGE").toString());	//14
+			vpd.put("var14", varOList.get(i).getString("SECRET_LEVEL"));	    //15
+			vpd.put("var15", varOList.get(i).getString("COMPANY_NAME"));	    //16
+			vpd.put("var16", varOList.get(i).getString("PAPER_DESCRIPTION"));	    //17
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
@@ -278,7 +299,7 @@ public class PaperController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "paperexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 2);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间
@@ -309,11 +330,14 @@ public class PaperController extends BaseController {
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("ROOM_NUM", listPd.get(i).getString("var1"));					//室编档号
-				pd.put("LIBRARY_NUM",listPd.get(i).getString("var2"));					//管编档号
+				pd.put("LIBRARY_NUM",listPd.get(i).getString("var2"));					//馆编档号
+				if (paperService.findByPNum(pd) != null){
+					continue;
+				}
 				pd.put("ROOM_CODE",listPd.get(i).getString("var3"));					//室编件号
 				pd.put("LIBRARY_CODE",listPd.get(i).getString("var4"));					//馆编件号
 				pd.put("STORAGE_YEAR",listPd.get(i).getString("var5"));					//归档年度
-				pd.put("SECTION_ID",listPd.get(i).getString("var6"));					//机构
+				pd.put("SECTION",listPd.get(i).getString("var6"));					//机构
 				pd.put("STORAGE_TIME",listPd.get(i).getString("var7"));					//保管期限
 				pd.put("PAPER_NUM",listPd.get(i).getString("var8"));					//文号
 				pd.put("PAPER_NAME",listPd.get(i).getString("var9"));					//题名
@@ -321,7 +345,7 @@ public class PaperController extends BaseController {
 				pd.put("PAPER_DATE",listPd.get(i).get("var11").toString());					//日期
 				pd.put("PAPER_PAGE",listPd.get(i).getString("var12"));					//页数
 				pd.put("SECRET_LEVEL",listPd.get(i).getString("var13"));				//密级
-				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
+//				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
 				pd.put("PAPER_DESCRIPTION",listPd.get(i).getString("var15"));			//备注
 
 				paperService.save(pd);
@@ -332,7 +356,6 @@ public class PaperController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-
 
 
 

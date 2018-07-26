@@ -9,22 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import com.beta.service.finance.FinanceManager;
+import com.fh.util.*;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
-import com.fh.util.AppUtil;
-import com.fh.util.ObjectExcelView;
-import com.fh.util.PageData;
-import com.fh.util.Jurisdiction;
-import com.fh.util.Tools;
 
 
 /** 
@@ -51,7 +50,7 @@ public class FinanceController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("FINANCE_ID", this.get32UUID());	//主键
+//		pd.put("FINANCE_ID", this.get32UUID());	//主键
 		financeService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -106,6 +105,11 @@ public class FinanceController extends BaseController {
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
+		String currentPage = pd.getString("currentPage");
+		if (currentPage != null){
+			int curPage = Integer.parseInt(currentPage);
+			page.setCurrentPage(curPage);
+		}
 		List<PageData>	varList = financeService.list(page);	//列出Finance列表
 		mv.setViewName("beta/finances/finance/finance_list");
 //		System.out.println(pd);
@@ -186,37 +190,37 @@ public class FinanceController extends BaseController {
 		pd = this.getPageData();
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		List<String> titles = new ArrayList<String>();
-		titles.add("财务id");	//1
+//		titles.add("财务id");	//1
 		titles.add("全宗号");	//2
 		titles.add("目录号");	//3
-		titles.add("案卷号");	//4
-		titles.add("会计核算材料名称");	//5
-		titles.add("会计年度");	//6
-		titles.add("单位名称");	//7
-		titles.add("保管期限");	//8
-		titles.add("归档号");	//9
-		titles.add("主管");	//10
-		titles.add("记账");	//11
-		titles.add("装订人");	//12
-		titles.add("页数");	//13
+		titles.add("类别");	//4
+		titles.add("档号");	//5
+		titles.add("题名");	//6
+		titles.add("起止时间");	//7
+		titles.add("归档年度");	//8
+		titles.add("页数");	//9
+		titles.add("保管期限");	//10
+		titles.add("密级");	//11
+		titles.add("保管单位名称");	//12
+		titles.add("备注");	//13
 		dataMap.put("titles", titles);
 		List<PageData> varOList = financeService.listAll(pd);
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).get("FINANCE_ID").toString());	//1
-			vpd.put("var2", varOList.get(i).getString("GENERAL_ARCHIVE"));	    //2
-			vpd.put("var3", varOList.get(i).getString("CATALOG_NUMBER"));	    //3
-			vpd.put("var4", varOList.get(i).getString("VOLUME_NUM"));	    //4
-			vpd.put("var5", varOList.get(i).getString("FINANCE_NAME"));	    //5
-			vpd.put("var6", varOList.get(i).getString("FINANCE_YEAR"));	    //6
-			vpd.put("var7", varOList.get(i).getString("COMPANY_NAME"));	    //7
-			vpd.put("var8", varOList.get(i).getString("STORAGE_TIME"));	    //8
-			vpd.put("var9", varOList.get(i).getString("ARCHIVE_NUM"));	    //9
-			vpd.put("var10", varOList.get(i).getString("SUPERVISOR"));	    //10
-			vpd.put("var11", varOList.get(i).getString("BOOKKEEPER"));	    //11
-			vpd.put("var12", varOList.get(i).getString("BINDING_PERSON"));	    //12
-			vpd.put("var13", varOList.get(i).get("PAGES").toString());	//13
+//			vpd.put("var1", varOList.get(i).get("FINANCE_ID").toString());	//1
+			vpd.put("var1", varOList.get(i).getString("GENERAL_ARCHIVE"));	    //2
+			vpd.put("var2", varOList.get(i).getString("CATALOG_NUMBER"));	    //3
+			vpd.put("var3", varOList.get(i).getString("CATEGORY"));	    //4
+			vpd.put("var4", varOList.get(i).getString("VOLUME_NUM"));	    //5
+			vpd.put("var5", varOList.get(i).getString("VOLUME_NAME"));	    //6
+			vpd.put("var6", varOList.get(i).getString("VOLUME_START_END_TIME"));	    //7
+			vpd.put("var7", varOList.get(i).getString("VOLUME_YEAR"));	    //8
+			vpd.put("var8", varOList.get(i).getString("VOLUME_PAGES"));	    //9
+			vpd.put("var9", varOList.get(i).getString("STORAGE_TIME"));	    //10
+			vpd.put("var10", varOList.get(i).getString("SECRET_LEVEL"));	    //11
+			vpd.put("var11", varOList.get(i).getString("COMPANY_NAME"));	    //12
+			vpd.put("var12", varOList.get(i).getString("DESCRIPTION"));	//13
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
@@ -224,7 +228,100 @@ public class FinanceController extends BaseController {
 		mv = new ModelAndView(erv,dataMap);
 		return mv;
 	}
-	
+
+
+	/**打开上传EXCEL页面
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goUploadExcel")
+	public ModelAndView goUploadExcel()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("beta/finances/finance/uploadexcel");
+		return mv;
+	}
+
+	/**下载模版
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/downExcel")
+	public void downExcel(HttpServletResponse response)throws Exception{
+		FileDownload.fileDownload(response, PathUtil.getClasspath() + Const.FILEPATHFILE + "Finances.xls", "Finances.xls");
+	}
+
+	/**从EXCEL导入到数据库
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/readExcel")
+	public ModelAndView readExcel(
+			@RequestParam(value="excel",required=false) MultipartFile file
+	) throws Exception{
+//		FHLOG.save(Jurisdiction.getUsername(), "从EXCEL导入到数据库");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;}
+		if (null != file && !file.isEmpty()) {
+			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
+			String fileName =  FileUpload.fileUp(file, filePath, "financeexcel");							//执行上传
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 1, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			/*存入数据库操作======================================*/
+//			pd.put("RIGHTS", "");					//权限
+//			pd.put("LAST_LOGIN", "");				//最后登录时间
+//			pd.put("IP", "");						//IP
+//			pd.put("STATUS", "0");					//状态
+//			pd.put("SKIN", "default");				//默认皮肤
+//			pd.put("ROLE_ID", "1");
+//			List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+//			pd.put("ROLE_ID", roleList.get(0).getROLE_ID());		//设置角色ID为随便第一个
+			/**
+			 * var0 :全宗号
+			 * var1 :目录号
+			 * var2 :类别
+			 * var3 :档号
+			 * var4 :题名
+			 * var5 ：起止时间
+			 * var6 ：归档年度
+			 * var7 ：页数
+			 * var8： 保管期限
+			 * var9 ：密级
+			 * var10：保管单位名称
+			 * var11：备注
+			 */
+
+			for(int i=0;i<listPd.size();i++){
+				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
+				pd.put("CATALOG_NUMBER", listPd.get(i).getString("var1"));				//目录号
+//				pd.put("CATEGORY",listPd.get(i).getString("var2"));							//类别
+
+				pd.put("VOLUME_NUM",listPd.get(i).getString("var3"));					//档号
+				pd.put("VOLUME_NAME",listPd.get(i).getString("var4"));					//题名
+				System.out.println(pd);
+//				if(fileService.findByFName(pd) != null){
+//					continue;
+//				}
+				pd.put("VOLUME_START_END_TIME",listPd.get(i).getString("var5"));		//起止时间
+				pd.put("VOLUME_YEAR",listPd.get(i).getString("var6"));						//归档年度
+				pd.put("VOLUME_PAGES",listPd.get(i).getString("var7"));			//页数
+				pd.put("STORAGE_TIME",listPd.get(i).getString("var8"));					//保管期限
+				pd.put("SECRET_LEVEL",listPd.get(i).getString("var9"));					//密级
+//				pd.put("COMPANY_NAME",listPd.get(i).get("var10").toString());					//保管单位名称
+				pd.put("DESCRIPTION",listPd.get(i).getString("var11"));				//备注
+
+				financeService.save(pd);
+			}
+			/*存入数据库操作======================================*/
+			mv.addObject("msg","success");
+		}
+		mv.setViewName("save_result");
+		return mv;
+	}
+
+
+
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

@@ -40,44 +40,54 @@
 								<td><input type="text" name="CATALOG_NUMBER" id="CATALOG_NUMBER" value="${pd.CATALOG_NUMBER}" maxlength="12" placeholder="这里输入目录号" title="目录号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">案卷号:</td>
-								<td><input type="text" name="VOLUME_NUM" id="VOLUME_NUM" value="${pd.VOLUME_NUM}" maxlength="12" placeholder="这里输入案卷号" title="案卷号" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">类别:</td>
+								<td><input type="text" name="CATEGORY" id="CATEGORY" value="${pd.CATEGORY}" maxlength="12" placeholder="这里输入类别" title="类别" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">会计核算材料名称:</td>
-								<td><input type="text" name="FINANCE_NAME" id="FINANCE_NAME" value="${pd.FINANCE_NAME}" maxlength="32" placeholder="这里输入会计核算材料名称" title="会计核算材料名称" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">档号:</td>
+								<td><input type="text" name="VOLUME_NUM" id="VOLUME_NUM" value="${pd.VOLUME_NUM}" maxlength="32" placeholder="这里输入档号" title="档号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">会计年度:</td>
-								<td><input type="text" name="FINANCE_YEAR" id="FINANCE_YEAR" value="${pd.FINANCE_YEAR}" maxlength="4" placeholder="这里输入会计年度" title="会计年度" style="width:98%;"/></td>
-							</tr>
-							<%--<tr>--%>
-								<%--<td style="width:75px;text-align: right;padding-top: 13px;">单位名称:</td>--%>
-								<%--<td><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" value="${pd.COMPANY_NAME}" maxlength="24" placeholder="这里输入单位名称" title="单位名称" style="width:98%;"/></td>--%>
-							<%--</tr>--%>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">保管期限:</td>
-								<td><input type="text" name="STORAGE_TIME" id="STORAGE_TIME" value="${pd.STORAGE_TIME}" maxlength="4" placeholder="这里输入保管期限" title="保管期限" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">题名:</td>
+								<td>
+									<textarea type="text" name="VOLUME_NAME" id="VOLUME_NAME" maxlength="4" placeholder="这里输入题名" title="题名" style="width:98%;height: 90px">${pd.VOLUME_NAME}</textarea>
+								</td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">归档号:</td>
-								<td><input type="text" name="ARCHIVE_NUM" id="ARCHIVE_NUM" value="${pd.ARCHIVE_NUM}" maxlength="6" placeholder="这里输入归档号" title="归档号" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">起止时间:</td>
+								<td><input type="text" name="VOLUME_START_END_TIME" id="VOLUME_START_END_TIME" value="${pd.VOLUME_START_END_TIME}" maxlength="24" placeholder="这里输入起止时间" title="起止时间" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">归档年度:</td>
+								<td><input type="text" name="VOLUME_YEAR" id="VOLUME_YEAR" value="${pd.VOLUME_YEAR}" maxlength="4" placeholder="这里输入归档年度" title="归档年度" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">页数:</td>
-								<td><input type="number" name="PAGES" id="PAGES" value="${pd.PAGES}" maxlength="32" placeholder="这里输入页数" title="页数" style="width:98%;"/></td>
+								<td><input type="text" name="VOLUME_PAGES" id="VOLUME_PAGES" value="${pd.VOLUME_PAGES}" maxlength="6" placeholder="这里输入页数" title="页数" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">主管:</td>
-								<td><input type="text" name="SUPERVISOR" id="SUPERVISOR" value="${pd.SUPERVISOR}" maxlength="24" placeholder="这里输入主管" title="主管" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">保管期限:</td>
+								<td id="TIME">
+									<select class="chosen-select form-control" name="STORAGE_TIME" id="STORAGE_TIME" data-placeholder="请选择保管期限" style="vertical-align:top;" style="width:98%;" >
+										<option value=""></option>
+										<%--<c:forEach items="${roleList}" var="role">--%>
+										<option value="永久" <c:if test="${'永久'== pd.STORAGE_TIME }">selected</c:if>>永久</option>
+										<option value="长期" <c:if test="${'长期'== pd.STORAGE_TIME }">selected</c:if>>长期</option>
+										<%--</c:forEach>--%>
+									</select>
+								</td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">记账:</td>
-								<td><input type="text" name="BOOKKEEPER" id="BOOKKEEPER" value="${pd.BOOKKEEPER}" maxlength="24" placeholder="这里输入记账" title="记账" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">密级:</td>
+								<td><input type="text" name="SECRET_LEVEL" id="SECRET_LEVEL" value="${pd.SECRET_LEVEL}" maxlength="24" placeholder="这里输入密级" title="密级" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">装订人:</td>
-								<td><input type="text" name="BINDING_PERSON" id="BINDING_PERSON" value="${pd.BINDING_PERSON}" maxlength="24" placeholder="这里输入装订人" title="装订人" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">保管单位名称:</td>
+								<td><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" value="${pd.COMPANY_NAME}" maxlength="24" placeholder="这里输入保管单位名称" title="保管单位名称" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">备注:</td>
+								<td><input type="text" name="DESCRIPTION" id="DESCRIPTION" value="${pd.DESCRIPTION}" maxlength="24" placeholder="这里输入备注" title="备注" style="width:98%;"/></td>
 							</tr>
 
 							<tr>
@@ -136,46 +146,66 @@
 				$("#CATALOG_NUMBER").focus();
 			return false;
 			}
+//			if($("#CATEGORY").val()==""){
+//				$("#CATEGORY").tips({
+//					side:3,
+//		            msg:'请输入类别',
+//		            bg:'#AE81FF',
+//		            time:2
+//		        });
+//				$("#CATEGORY").focus();
+//			return false;
+//			}
 			if($("#VOLUME_NUM").val()==""){
 				$("#VOLUME_NUM").tips({
 					side:3,
-		            msg:'请输入案卷号',
+		            msg:'请输入档号',
 		            bg:'#AE81FF',
 		            time:2
 		        });
 				$("#VOLUME_NUM").focus();
 			return false;
 			}
-			if($("#FINANCE_NAME").val()==""){
-				$("#FINANCE_NAME").tips({
+			if($("#VOLUME_NAME").val()==""){
+				$("#VOLUME_NAME").tips({
 					side:3,
-		            msg:'请输入会计核算材料名称',
+		            msg:'请输入题名',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#FINANCE_NAME").focus();
+				$("#VOLUME_NAME").focus();
 			return false;
 			}
-			if($("#FINANCE_YEAR").val()==""){
-				$("#FINANCE_YEAR").tips({
+			if($("#VOLUME_START_END_TIME").val()==""){
+				$("#VOLUME_START_END_TIME").tips({
 					side:3,
-		            msg:'请输入会计年度',
+		            msg:'请输入起止时间发',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#FINANCE_YEAR").focus();
+				$("#VOLUME_START_END_TIME").focus();
 			return false;
 			}
-//			if($("#COMPANY_NAME").val()==""){
-//				$("#COMPANY_NAME").tips({
-//					side:3,
-//		            msg:'请输入单位名称',
-//		            bg:'#AE81FF',
-//		            time:2
-//		        });
-//				$("#COMPANY_NAME").focus();
-//			return false;
-//			}
+			if($("#VOLUME_YEAR").val()==""){
+				$("#VOLUME_YEAR").tips({
+					side:3,
+		            msg:'请输入归档年度',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#VOLUME_YEAR").focus();
+			return false;
+			}
+			if($("#VOLUME_PAGES").val()==""){
+				$("#VOLUME_PAGES").tips({
+					side:3,
+		            msg:'请输入页数',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#VOLUME_PAGES").focus();
+			return false;
+			}
 			if($("#STORAGE_TIME").val()==""){
 				$("#STORAGE_TIME").tips({
 					side:3,
@@ -186,56 +216,36 @@
 				$("#STORAGE_TIME").focus();
 			return false;
 			}
-			if($("#ARCHIVE_NUM").val()==""){
-				$("#ARCHIVE_NUM").tips({
-					side:3,
-		            msg:'请输入归档号',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#ARCHIVE_NUM").focus();
-			return false;
-			}
-//			if($("#SUPERVISOR").val()==""){
-//				$("#SUPERVISOR").tips({
+//			if($("#SECRET_LEVEL").val()==""){
+//				$("#SECRET_LEVEL").tips({
 //					side:3,
-//		            msg:'请输入主管',
+//		            msg:'请输入密级',
 //		            bg:'#AE81FF',
 //		            time:2
 //		        });
-//				$("#SUPERVISOR").focus();
+//				$("#SECRET_LEVEL").focus();
 //			return false;
 //			}
-//			if($("#BOOKKEEPER").val()==""){
-//				$("#BOOKKEEPER").tips({
+//			if($("#COMPANY_NAME").val()==""){
+//				$("#COMPANY_NAME").tips({
 //					side:3,
-//		            msg:'请输入记账',
+//		            msg:'请输入保管单位名称',
 //		            bg:'#AE81FF',
 //		            time:2
 //		        });
-//				$("#BOOKKEEPER").focus();
+//				$("#COMPANY_NAME").focus();
 //			return false;
 //			}
-//			if($("#BINDING_PERSON").val()==""){
-//				$("#BINDING_PERSON").tips({
+//			if($("#DESCRIPTION").val()==""){
+//				$("#DESCRIPTION").tips({
 //					side:3,
-//		            msg:'请输入装订人',
+//		            msg:'请输入备注',
 //		            bg:'#AE81FF',
 //		            time:2
 //		        });
-//				$("#BINDING_PERSON").focus();
+//				$("#DESCRIPTION").focus();
 //			return false;
 //			}
-			if($("#PAGES").val()==""){
-				$("#PAGES").tips({
-					side:3,
-		            msg:'请输入页数',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#PAGES").focus();
-			return false;
-			}
 			$("#Form").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();

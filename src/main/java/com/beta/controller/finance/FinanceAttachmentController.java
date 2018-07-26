@@ -1,7 +1,8 @@
 package com.beta.controller.finance;
 
 
-import com.beta.service.finance.Finance_AttachmentManager;
+import com.beta.service.finance.FinanceAttachmentManager;
+import com.beta.service.finance.FinanceAttachmentManager;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
 import com.fh.util.*;
@@ -27,12 +28,12 @@ import java.util.*;
  * 创建时间：2018-07-06
  */
 @Controller
-@RequestMapping(value="/finance_attachment")
-public class Finance_AttachmentController extends BaseController {
+@RequestMapping(value="/financeattachment")
+public class FinanceAttachmentController extends BaseController {
 	
-	String menuUrl = "finance_attachment/list.do"; //菜单地址(权限用)
-	@Resource(name="finance_attachmentService")
-	private Finance_AttachmentManager finance_attachmentService;
+	String menuUrl = "financeattachment/list.do"; //菜单地址(权限用)
+	@Resource(name="financeattachmentService")
+	private FinanceAttachmentManager financeattachmentService;
 	
 	/**保存
 	 * @param
@@ -46,7 +47,7 @@ public class Finance_AttachmentController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ATTACHMENT_SIZE", FileUtil.getFilesize(PathUtil.getClasspath() + Const.FILEPATHFILEOA + pd.getString("ATTACHMENT_PATH")));	//文件大小
-		finance_attachmentService.save(pd);
+		financeattachmentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -62,8 +63,8 @@ public class Finance_AttachmentController extends BaseController {
 //		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = finance_attachmentService.findById(pd);
-		finance_attachmentService.delete(pd);
+		pd = financeattachmentService.findById(pd);
+		financeattachmentService.delete(pd);
 		DelAllFile.delFolder(PathUtil.getClasspath()+ Const.FILEPATHFILEOA + pd.getString("UNROLLING_ATTACHMENT_PATH")); //删除文件
 		out.write("success");
 		out.close();
@@ -82,7 +83,7 @@ public class Finance_AttachmentController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		page.setPd(pd);
-		List<PageData>	varList = finance_attachmentService.list(page);	//列出Unrolling_Attachment列表
+		List<PageData>	varList = financeattachmentService.list(page);	//列出Unrolling_Attachment列表
 		mv.setViewName("beta/finances/attachment/attachment_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
@@ -125,10 +126,10 @@ public class Finance_AttachmentController extends BaseController {
 			PageData fpd = new PageData();
 			for(int i=0;i<ArrayDATA_IDS.length;i++){
 				fpd.put("ATTACHMENT_ID", ArrayDATA_IDS[i]);
-				fpd = finance_attachmentService.findById(fpd);
+				fpd = financeattachmentService.findById(fpd);
 				DelAllFile.delFolder(PathUtil.getClasspath()+ Const.FILEPATHFILEOA + fpd.getString("ATTACHMENT_PATH")); //删除物理文件
 			}
-			finance_attachmentService.deleteAll(ArrayDATA_IDS);		//删除数据库记录
+			financeattachmentService.deleteAll(ArrayDATA_IDS);		//删除数据库记录
 			pd.put("msg", "ok");
 		}else{
 			pd.put("msg", "no");
@@ -146,7 +147,7 @@ public class Finance_AttachmentController extends BaseController {
 	public void downExcel(HttpServletResponse response)throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = finance_attachmentService.findById(pd);
+		pd = financeattachmentService.findById(pd);
 		String fileName = pd.getString("ATTACHMENT_PATH");
 		FileDownload.fileDownload(response, PathUtil.getClasspath() + Const.FILEPATHFILEOA + fileName, pd.getString("ATTACHMENT_NAME")+fileName.substring(19, fileName.length()));
 	}

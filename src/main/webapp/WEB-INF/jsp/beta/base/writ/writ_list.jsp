@@ -328,8 +328,8 @@
             diag.Drag = true;
             diag.Title = "详情";
             diag.URL = '<%=basePath%>file/detail.do?FILE_ID=' + Id;
-            diag.Width = 450;
-            diag.Height = 355;
+            diag.Width = 500;
+            diag.Height = 550;
             diag.Modal = true;				//有无遮罩窗口
             diag.ShowMaxButton = true;	//最大化按钮
             diag.ShowMinButton = true;		//最小化按钮
@@ -346,8 +346,8 @@
             diag.Drag = true;
             diag.Title = "详情";
             diag.URL = '<%=basePath%>paper/detail.do?PAPER_ID=' + Id;
-            diag.Width = 450;
-            diag.Height = 355;
+            diag.Width = 500;
+            diag.Height = 550;
             diag.Modal = true;				//有无遮罩窗口
             diag.ShowMaxButton = true;	//最大化按钮
             diag.ShowMinButton = true;		//最小化按钮
@@ -367,11 +367,9 @@
         if(x == 0){
             window.open('<%=basePath%>file/findByNum.do?VOLUME_NUM=' + num + '&FILE_SN=' + sn);
         }else {
-            window.open('<%=basePath%>paper/findByNum.do?LIBRARY_NUM=' + num);
+            var url="/uploadFiles/uploadFile/"+ num +".pdf";
+            window.open("pdfjs/web/viewer.html?file="+url);
         }
-
-
-
 //            var url="/uploadFiles/uploadFile/"+p;
 //            window.open("pdfjs/web/viewer.html?file="+url);
     }
