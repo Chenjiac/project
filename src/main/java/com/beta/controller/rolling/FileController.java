@@ -289,6 +289,7 @@ public class FileController extends BaseController {
 	public ModelAndView readExcel(
 			@RequestParam(value="excel",required=false) MultipartFile file
 	) throws Exception{
+//		System.out.println("---------------读取excel----------------");
 //		FHLOG.save(Jurisdiction.getUsername(), "从EXCEL导入到数据库");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -296,7 +297,7 @@ public class FileController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "fileexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第1个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间
@@ -324,7 +325,7 @@ public class FileController extends BaseController {
 			 * var14：保管单位名称
 			 * var15：备注
 			 */
-
+//			System.out.println("-------------开始读取-----------------");
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("CATALOG_NUMBER", listPd.get(i).getString("var1"));				//目录号
