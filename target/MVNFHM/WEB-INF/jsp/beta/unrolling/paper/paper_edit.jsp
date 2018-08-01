@@ -226,16 +226,16 @@
 				$("#STORAGE_TIME").focus();
 			return false;
 			}
-			if($("#PAPER_NUM").val()==""){
-				$("#PAPER_NUM").tips({
-					side:3,
-		            msg:'请输入文号',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#PAPER_NUM").focus();
-			return false;
-			}
+//			if($("#PAPER_NUM").val()==""){
+//				$("#PAPER_NUM").tips({
+//					side:3,
+//		            msg:'请输入文号',
+//		            bg:'#AE81FF',
+//		            time:2
+//		        });
+//				$("#PAPER_NUM").focus();
+//			return false;
+//			}
 			if($("#PAPER_NAME").val()==""){
 				$("#PAPER_NAME").tips({
 					side:3,
