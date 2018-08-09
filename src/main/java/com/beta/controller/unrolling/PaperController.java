@@ -345,7 +345,7 @@ public class PaperController extends BaseController {
 				pd.put("PAPER_DATE",listPd.get(i).get("var11").toString());					//日期
 				pd.put("PAPER_PAGE",listPd.get(i).getString("var12"));					//页数
 				pd.put("SECRET_LEVEL",listPd.get(i).getString("var13"));				//密级
-//				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
+				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
 				pd.put("PAPER_DESCRIPTION",listPd.get(i).getString("var15"));			//备注
 
 				paperService.save(pd);

@@ -37,7 +37,23 @@
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" placeholder="这里输入题名" class="nav-search-input" id="nav-search-input" autocomplete="off" name="VOLUME_NAME" value="${pd.VOLUME_NAME }" placeholder="这里输入题名"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+									</div>
+								</td>
+								<td>
+									<div class="nav-search">
+										<span class="input-icon">
+											<input type="text" placeholder="这里输入归档年度" class="nav-search-input" id="nav-search-input" autocomplete="off" name="VOLUME_YEAR" value="${pd.VOLUME_YEAR }" placeholder="这里输入归档年度"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+									</div>
+								</td>
+								<td>
+									<div class="nav-search">
+										<span class="input-icon">
+											<input type="text" placeholder="这里输入保管单位名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="COMPANY_NAME" value="${pd.COMPANY_NAME }" placeholder="这里输入保管单位名称"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -82,6 +98,7 @@
 									<th class="center">保管单位名称</th>
 									<th class="center">备注</th>
 									<th class="center">操作</th>
+									<th class="center">预览</th>
 								</tr>
 							</thead>
 													
@@ -101,7 +118,7 @@
 											<td class='center'>${var.CATALOG_NUMBER}</td>
 											<td class='center'>${var.CATEGORY}</td>
 											<td class='center'>${var.VOLUME_NUM}</td>
-											<td class='center'>${var.VOLUME_NAME}</td>
+											<td class='center'><a style="cursor: pointer;text-decoration: none" onclick="openPDF('${var.VOLUME_NUM}');">${var.VOLUME_NAME}</a></td>
 											<td class='center'>${var.VOLUME_START_END_TIME}</td>
 											<td class='center'>${var.VOLUME_YEAR}</td>
 											<td class='center'>${var.VOLUME_PAGES}</td>
@@ -110,23 +127,31 @@
 											<td class='center'>${var.COMPANY_NAME}</td>
 											<td class='center'>${var.DESCRIPTION}</td>
 											<td class="center">
+												<button style="cursor:pointer; width: 40px;height: 24px;font-size: 12px;line-height: 24px;vertical-align: middle" onclick="openPDF('${var.VOLUME_NUM}');" title="预览">预览</button>
+											</td>
+											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
 												</c:if>
-												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.FINANCE_ID}');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
-													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.FINANCE_ID}');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-													</a>
-													</c:if>
-													<%--<a href="finance_attachment/list.do?FINANCE_ID=${var.FINANCE_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>--%>
-												</div>
-												<div class="hidden-md hidden-lg">
+												<%--<div class="hidden-sm hidden-xs btn-group">--%>
+													<%--<c:if test="${QX.edit == 1 }">--%>
+													<%--<a class="btn btn-xs btn-success" style="width: 35%;" title="编辑" onclick="edit('${var.FINANCE_ID}');">--%>
+														<%--<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>--%>
+													<%--</a>--%>
+													<%--</c:if>--%>
+													<%--<c:if test="${QX.del == 1 }">--%>
+													<%--<a class="btn btn-xs btn-danger" style="width: 35%" onclick="del('${var.FINANCE_ID}');">--%>
+														<%--<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>--%>
+													<%--</a>--%>
+													<%--</c:if>--%>
+													<%--<a style="cursor:pointer;height: 26px;background-color:#00a2d4;" onclick="openPDF('${var.VOLUME_NUM}');" class="tooltip-success" data-rel="tooltip" title="预览">--%>
+														<%--<span class="green">--%>
+															<%--<i class="ace-icon fa fa-eye pink"></i>--%>
+														<%--</span>--%>
+													<%--</a>--%>
+													<%--&lt;%&ndash;<a href="finance_attachment/list.do?FINANCE_ID=${var.FINANCE_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>&ndash;%&gt;--%>
+												<%--</div>--%>
+												<%--<div class="hidden-md hidden-lg">--%>
 													<div class="inline pos-rel">
 														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
 															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
@@ -151,9 +176,16 @@
 																</a>
 															</li>
 															</c:if>
+															<%--<li>--%>
+																<%--<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}');" class="tooltip-success" data-rel="tooltip" title="预览">--%>
+																	<%--<span class="green">--%>
+																		<%--<i class="ace-icon fa fa-eye pink"></i>--%>
+																	<%--</span>--%>
+																<%--</a>--%>
+															<%--</li>--%>
 														</ul>
 													</div>
-												</div>
+												<%--</div>--%>
 											</td>
 										</tr>
 									
@@ -333,6 +365,11 @@
 			 };
 			 diag.show();
 		}
+
+		function openPDF(num) {
+            var url="/uploadFiles/uploadFile/"+ num +".pdf";
+            window.open("pdfjs/web/viewer.html?file="+url);
+        }
 		
 		//批量操作
 		function makeAll(msg){

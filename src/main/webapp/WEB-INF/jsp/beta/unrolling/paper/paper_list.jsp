@@ -50,6 +50,14 @@
 										</span>
 									</div>
 								</td>
+								<td>
+									<div class="nav-search">
+										<span class="input-icon">
+											<input type="text" placeholder="这里输入保管单位名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="COMPANY_NAME" value="${pd.COMPANY_NAME }" placeholder="这里输入保管单位名称"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+									</div>
+								</td>
 								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>--%>
 								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>--%>
 								<%--<td style="vertical-align:top;padding-left:2px;">--%>
@@ -97,6 +105,7 @@
 									<th class="center">密级</th>
 									<th class="center">保管单位名称</th>
 									<th class="center">备注</th>
+									<th class="center">预览</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -122,13 +131,16 @@
 											<td class='center'>${var.SECTION}</td>
 											<td class='center'>${var.STORAGE_TIME}</td>
 											<td class='center'>${var.NUM}</td>
-											<td class='center'>${var.NAME}</td>
+											<td class='center'><a style="cursor: pointer;text-decoration: none;" onclick="openPDF('${var.LIBRARY_NUM}');">${var.NAME}</a></td>
 											<td class='center'>${var.RES}</td>
 											<td class='center'>${var.PAPER_DATE}</td>
 											<td class='center'>${var.PAPER_PAGE}</td>
 											<td class='center'>${var.SECRET_LEVEL}</td>
 											<td class='center'>${var.COMPANY_NAME}</td>
 											<td class='center'>${var.DES}</td>
+											<td class="center">
+												<button style="cursor:pointer; width: 40px;height: 24px;font-size: 12px;line-height: 24px;vertical-align: middle" onclick="openPDF('${var.LIBRARY_NUM}');" title="预览">预览</button>
+											</td>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
@@ -170,13 +182,6 @@
 																</a>
 															</li>
 															</c:if>
-															<li>
-																<a style="cursor:pointer;" onclick="openPDF('${var.LIBRARY_NUM}');" class="tooltip-success" data-rel="tooltip" title="预览">
-																	<span class="green">
-																		<i class="ace-icon fa fa-eye pink"></i>
-																	</span>
-																</a>
-															</li>
 														</ul>
 													</div>
 												<%--</div>--%>

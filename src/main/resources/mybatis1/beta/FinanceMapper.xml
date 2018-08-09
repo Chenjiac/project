@@ -55,6 +55,7 @@
 		VOLUME_PAGES,
 		STORAGE_TIME,
 		SECRET_LEVEL,
+		COMPANY_NAME,
 		DESCRIPTION
 		) values (
 		#{GENERAL_ARCHIVE},
@@ -66,6 +67,7 @@
 		#{VOLUME_PAGES},
 		#{STORAGE_TIME},
 		#{SECRET_LEVEL},
+		#{COMPANY_NAME},
 		#{DESCRIPTION}
 		)
 	</insert>
@@ -109,6 +111,16 @@
 		where 
 			FINANCE_ID = #{FINANCE_ID}
 	</select>
+
+	<!--通过VOLUME_NUM查找数据-->
+	<select id="findByNum" parameterType="pd" resultType="pd">
+		SELECT
+		<include refid="Field"></include>
+		FROM
+		<include refid="tableName"></include>
+		WHERE
+			VOLUME_NUM = #{VOLUME_NUM}
+	</select>
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
@@ -129,15 +141,29 @@
 		from 
 		<include refid="tableName"></include>
 		where 1=1
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+		<if test="pd.VOLUME_NAME!= null and pd.VOLUME_NAME != ''"><!-- 关键词检索 -->
 			and
 				(
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
+				<!--	根据需求自己加检索条件  -->
+					VOLUME_NAME LIKE CONCAT(CONCAT('%', #{pd.VOLUME_NAME}),'%')
+
 				)
+		</if>
+		<if test="pd.VOLUME_YEAR!= null and pd.VOLUME_YEAR != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件  -->
+			VOLUME_YEAR LIKE CONCAT(CONCAT('%', #{pd.VOLUME_YEAR}),'%')
+
+			)
+		</if>
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件  -->
+			COMPANY_NAME LIKE CONCAT(CONCAT('%', #{pd.COMPANY_NAME}),'%')
+
+			)
 		</if>
 	</select>
 	

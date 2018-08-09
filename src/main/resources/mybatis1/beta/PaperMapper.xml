@@ -70,6 +70,7 @@
 		PAPER_DATE,
 		PAPER_PAGE,
 		SECRET_LEVEL,
+		COMPANY_NAME,
 		PAPER_DESCRIPTION
 		) values (
 		#{GENERAL_ARCHIVE},
@@ -86,6 +87,7 @@
 		#{PAPER_DATE},
 		#{PAPER_PAGE},
 		#{SECRET_LEVEL},
+		#{COMPANY_NAME},
 		#{PAPER_DESCRIPTION}
 		)
 	</insert>
@@ -118,6 +120,7 @@
 			PAPER_DATE = #{PAPER_DATE},
 			PAPER_PAGE = #{PAPER_PAGE},
 			SECRET_LEVEL = #{SECRET_LEVEL},
+			COMPANY_NAME = #{COMPANY_NAME},
 			PAPER_DESCRIPTION = #{PAPER_DESCRIPTION}
 		where
 		PAPER_ID = #{PAPER_ID}
@@ -181,6 +184,13 @@
 			(
 			<!--	根据需求自己加检索条件  -->
 			STORAGE_YEAR LIKE CONCAT(CONCAT('%', #{pd.STORAGE_YEAR}),'%')
+			)
+		</if>
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!--	根据需求自己加检索条件  -->
+			COMPANY_NAME LIKE CONCAT(CONCAT('%', #{pd.COMPANY_NAME}),'%')
 			)
 		</if>
 	</select>

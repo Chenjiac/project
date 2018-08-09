@@ -294,11 +294,14 @@ public class FinanceController extends BaseController {
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("CATALOG_NUMBER", listPd.get(i).getString("var1"));				//目录号
-//				pd.put("CATEGORY",listPd.get(i).getString("var2"));							//类别
+				pd.put("CATEGORY",listPd.get(i).getString("var2"));							//类别
 
 				pd.put("VOLUME_NUM",listPd.get(i).getString("var3"));					//档号
+				if (financeService.findByNum(pd) != null){
+					continue;
+				}
 				pd.put("VOLUME_NAME",listPd.get(i).getString("var4"));					//题名
-				System.out.println(pd);
+//				System.out.println(pd);
 //				if(fileService.findByFName(pd) != null){
 //					continue;
 //				}
@@ -307,7 +310,7 @@ public class FinanceController extends BaseController {
 				pd.put("VOLUME_PAGES",listPd.get(i).getString("var7"));			//页数
 				pd.put("STORAGE_TIME",listPd.get(i).getString("var8"));					//保管期限
 				pd.put("SECRET_LEVEL",listPd.get(i).getString("var9"));					//密级
-//				pd.put("COMPANY_NAME",listPd.get(i).get("var10").toString());					//保管单位名称
+				pd.put("COMPANY_NAME",listPd.get(i).getString("var10"));					//保管单位名称
 				pd.put("DESCRIPTION",listPd.get(i).getString("var11"));				//备注
 
 				financeService.save(pd);

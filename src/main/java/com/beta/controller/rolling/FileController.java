@@ -347,7 +347,7 @@ public class FileController extends BaseController {
 				pd.put("STORAGE_YEAR",listPd.get(i).getString("var11"));					//归档年度
 				pd.put("STORAGE_TIME",listPd.get(i).getString("var12"));				//保管期限
 				pd.put("SECRET_LEVEL",listPd.get(i).getString("var13"));				//密级
-//				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
+				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
 				pd.put("FILE_DESCRIPTION",listPd.get(i).getString("var15"));							//备注
 
 //				String USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var1"));	//根据姓名汉字生成全拼
