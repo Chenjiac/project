@@ -127,8 +127,9 @@ public class DbFH{
 		String dbport = pros.getProperty("dbport");				//端口
 		String databaseName = pros.getProperty("databaseName");	//数据库名
 		Connection conn = DbFH.getCon(dbtype,username,password,address+":"+dbport,databaseName);
+		System.out.println(conn);
 		if("oracle".equals(dbtype)){databaseName = username;}
-		Object[] arrOb = {databaseName,DbFH.getTablesByCon(conn, "sqlserver".equals(dbtype)?null:databaseName),dbtype};
+		Object[] arrOb = {databaseName,DbFH.getTablesByCon(conn, "mysql".equals(dbtype)?null:databaseName),dbtype};
 		return arrOb;
 	}
 
@@ -222,7 +223,7 @@ public class DbFH{
 		public DbBackUpCallable(String tableName){
 			this.tableName = tableName;
 		}
-		@Override
+
 		public Object call() {
 			try {
 				String remoteDB = pros.getProperty("remoteDB");			//是否远程备份数据库 yes or no
