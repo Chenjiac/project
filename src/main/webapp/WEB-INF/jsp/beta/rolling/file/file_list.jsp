@@ -339,17 +339,34 @@
 		}
 
         //删除
-        function del(Id){
-            bootbox.confirm("确定要删除吗?", function(result) {
-                if(result) {
-                    top.jzts();
-                    var url = "<%=basePath%>file/delete.do?FILE_ID="+Id+"&tm="+new Date().getTime();
-                    $.get(url,function(data){
-                        tosearch();
+        <%--function del(Id){--%>
+            <%--bootbox.confirm("确定要删除吗?", function(result) {--%>
+                <%--if(result) {--%>
+                    <%--top.jzts();--%>
+                    <%--var url = "<%=basePath%>file/delete.do?FILE_ID="+Id+"&tm="+new Date().getTime();--%>
+                    <%--$.get(url,function(data){--%>
+                        <%--tosearch();--%>
+                    <%--});--%>
+                <%--}--%>
+            <%--});--%>
+        <%--}--%>
+
+        function del(Id) {
+            bootbox.confirm("确定要删除吗？",function (result) {
+                if(result == true){
+                    bootbox.confirm("请再次确认是否删除",function (res) {
+                        if (res){
+                            top.jzts();
+                            var url = "<%=basePath%>file/delete.do?FILE_ID="+Id+"&tm="+new Date().getTime();
+                            $.get(url,function (data) {
+                                tosearch();
+                            });
+                        }
                     });
                 }
             });
         }
+
 		//修改
 		function edit(Id){
 			 top.jzts();
