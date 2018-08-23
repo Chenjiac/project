@@ -57,6 +57,14 @@
 										</span>
                                         </div>
                                     </td>
+                                    <td>
+                                        <div class="nav-search">
+										<span class="input-icon">
+											<input type="text" placeholder="这里输入保管单位名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="COMPANY_NAME" value="${pd.COMPANY_NAME }" placeholder="这里输入保管单位名称"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+                                        </div>
+                                    </td>
                                     <%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>--%>
                                     <%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>--%>
                                     <%--<td style="vertical-align:top;padding-left:2px;">--%>
@@ -95,6 +103,7 @@
                                     <%--<th class="center">页数</th>--%>
                                     <%--<th class="center">日期</th>--%>
                                     <th class="center">归档年度</th>
+                                    <th class="center">保管单位名称</th>
                                     <%--<th class="center">保管期限</th>--%>
                                     <%--<th class="center">密级</th>--%>
                                     <%--<th class="center">保管单位名称</th>--%>
@@ -129,6 +138,7 @@
                                                     <%--<td class='center'>${var.FILE_PAGE}</td>--%>
                                                     <%--<td class='center'>${var.FILE_DATE}</td>--%>
                                                     <td class='center'>${var.STORAGE_YEAR}</td>
+                                                    <td class='center'>${var.COMPANY_NAME}</td>
                                                     <%--<td class='center'>${var.STORAGE_TIME}</td>--%>
                                                     <%--<td class='center'>${var.SECRET_LEVEL}</td>--%>
                                                     <%--<td class='center'>${var.COMPANY_NAME}</td>--%>

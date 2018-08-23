@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-
-import com.beta.service.base.SectionManager;
 import com.beta.service.unrolling.PaperManager;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.util.*;
@@ -40,8 +38,6 @@ public class PaperController extends BaseController {
 	String menuUrl = "paper/list.do"; //菜单地址(权限用)
 	@Resource(name="paperService")
 	private PaperManager paperService;
-	@Resource(name = "sectionService")
-	private SectionManager sectionService;
 	@Resource(name="fhlogService")
 	private FHlogManager FHLOG;
 	
@@ -106,9 +102,29 @@ public class PaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
+		String keywords = pd.getString("NAME");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+			StringBuffer sb1 = new StringBuffer();
+			sb1.append("%");
+			char[] chars = keywords.toCharArray();
+			for (char c:chars){
+				sb1.append(c);
+				sb1.append("%");
+			}
+			String str = sb1.toString();
+			pd.put("str",str);
+		}
+		String keyword = pd.getString("COMPANY_NAME");
+		if (null != keyword && !"".equals(keyword)){
+			StringBuffer sb2 = new StringBuffer();
+			sb2.append("%");
+			char[] chars = keyword.toCharArray();
+			for (char c:chars){
+				sb2.append(c);
+				sb2.append("%");
+			}
+			String str1 = sb2.toString();
+			pd.put("str1",str1);
 		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
@@ -117,10 +133,8 @@ public class PaperController extends BaseController {
 			page.setCurrentPage(curPage);
 		}
 		List<PageData>	varList = paperService.list(page);	//列出Paper列表
-//		List<PageData>  sectionList = sectionService.list(page);//列出Section列表
 		mv.setViewName("beta/unrolling/paper/paper_list");
 		mv.addObject("varList", varList);
-//		mv.addObject("sectionList",sectionList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -135,9 +149,7 @@ public class PaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		List<PageData> sectionList = sectionService.list(page);
 		mv.setViewName("beta/unrolling/paper/paper_edit");
-		mv.addObject("sectionList",sectionList);
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -153,9 +165,7 @@ public class PaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = paperService.findById(pd);	//根据ID读取
-//		List<PageData> sectionList = sectionService.list(page);
 		mv.setViewName("beta/unrolling/paper/paper_edit");
-//		mv.addObject("sectionList",sectionList);
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;
@@ -299,7 +309,7 @@ public class PaperController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "paperexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 2);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间

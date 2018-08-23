@@ -35,6 +35,31 @@ public class WritController extends BaseController {
         ModelAndView mv = this.getModelAndView();
         PageData pd = new PageData();
         pd = this.getPageData();
+        String keywords = pd.getString("NAME");				//关键词检索条件
+        if(null != keywords && !"".equals(keywords)){
+            StringBuffer sb1 = new StringBuffer();
+            sb1.append("%");
+            char[] chars = keywords.toCharArray();
+            for (char c:chars){
+                sb1.append(c);
+                sb1.append("%");
+            }
+            String str = sb1.toString();
+            pd.put("str",str);
+        }
+        String keyword = pd.getString("COMPANY_NAME");
+        if (null != keyword && !"".equals(keyword)){
+            StringBuffer sb2 = new StringBuffer();
+            sb2.append("%");
+            char[] chars = keyword.toCharArray();
+            for (char c:chars){
+                sb2.append(c);
+                sb2.append("%");
+            }
+            String str1 = sb2.toString();
+//			System.out.println(str2);
+            pd.put("str1",str1);
+        }
         page.setPd(pd);
         List<PageData> varList = fileService.listW(page);	//列出search列表
         mv.setViewName("beta/base/writ/writ_list");

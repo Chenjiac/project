@@ -48,6 +48,7 @@
 		(
 		GENERAL_ARCHIVE,
 		CATALOG_NUMBER,
+		CATEGORY,
 		VOLUME_NUM,
 		VOLUME_NAME,
 		VOLUME_START_END_TIME,
@@ -60,6 +61,7 @@
 		) values (
 		#{GENERAL_ARCHIVE},
 		#{CATALOG_NUMBER},
+		#{CATEGORY},
 		#{VOLUME_NUM},
 		#{VOLUME_NAME},
 		#{VOLUME_START_END_TIME},
@@ -141,11 +143,11 @@
 		from 
 		<include refid="tableName"></include>
 		where 1=1
-		<if test="pd.VOLUME_NAME!= null and pd.VOLUME_NAME != ''"><!-- 关键词检索 -->
+		<if test="pd.str!= null and pd.str != ''"><!-- 关键词检索 -->
 			and
 				(
 				<!--	根据需求自己加检索条件  -->
-					VOLUME_NAME LIKE CONCAT(CONCAT('%', #{pd.VOLUME_NAME}),'%')
+					VOLUME_NAME LIKE #{pd.str}
 
 				)
 		</if>
@@ -157,11 +159,11 @@
 
 			)
 		</if>
-		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''"><!-- 关键词检索 -->
+		<if test="pd.str1!= null and pd.str1 != ''"><!-- 关键词检索 -->
 			and
 			(
 			<!--	根据需求自己加检索条件  -->
-			COMPANY_NAME LIKE CONCAT(CONCAT('%', #{pd.COMPANY_NAME}),'%')
+			COMPANY_NAME LIKE #{pd.str1}
 
 			)
 		</if>

@@ -1,6 +1,7 @@
 package com.beta.controller.rolling;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,9 +107,28 @@ public class FileController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
+		String keywords = pd.getString("NAME");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+//			pd.put("keywords", keywords.trim());
+			char[] chars = keywords.toCharArray();
+			String str = "%";
+			for (char c:chars){
+				str += c;
+				str += "%";
+			}
+			System.out.println(str);
+			pd.put("str",str);
+		}
+		String keyword = pd.getString("COMPANY_NAME");
+		if(null != keyword && !"".equals(keyword)){
+//			pd.put("COMPANY_NAME",keyword.trim());
+			char[] chars = keyword.toCharArray();
+			String str1 = "%";
+			for (char c:chars){
+				str1 += c;
+				str1 += "%";
+			}
+			pd.put("str1",str1);
 		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
@@ -297,7 +317,7 @@ public class FileController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "fileexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第1个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 1, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第2行开始；0:从第A列开始；0:第1个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间

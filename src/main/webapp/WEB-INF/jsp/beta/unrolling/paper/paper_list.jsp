@@ -212,7 +212,7 @@
 									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
 									</c:if>
 									<c:if test="${QX.del == 1 }">
-									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
+									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?','请再次确认是否删除选中的数据？？？？');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
 									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -332,17 +332,21 @@
 		}
 		
 		//删除
-		function del(Id){
-			bootbox.confirm("确定要删除吗?", function(result) {
-				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>paper/delete.do?PAPER_ID="+Id+"&tm="+new Date().getTime();
-					$.get(url,function(data){
-						tosearch();
-					});
-				}
-			});
-		}
+        function del(Id) {
+            bootbox.confirm("确定要删除吗？",function (result) {
+                if(result == true){
+                    bootbox.confirm("请再次确认是否删除？？？",function (res) {
+                        if (res){
+                            top.jzts();
+                            var url = "<%=basePath%>paper/delete.do?PAPER_ID="+Id+"&tm="+new Date().getTime();
+                            $.get(url,function (data) {
+                                tosearch();
+                            });
+                        }
+                    });
+                }
+            });
+        }
 		
 		//修改
 		function edit(Id){
@@ -375,47 +379,53 @@
         }
 		
 		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
+		function makeAll(msg1,msg2){
+			bootbox.confirm(msg1, function(result) {
 				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>paper/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											tosearch();
-									 });
-								}
-							});
+				    bootbox.confirm(msg2,function (res) {
+						if(res){
+                            var str = '';
+                            for(var i=0;i < document.getElementsByName('ids').length;i++){
+                                if(document.getElementsByName('ids')[i].checked){
+                                    if(str=='') str += document.getElementsByName('ids')[i].value;
+                                    else str += ',' + document.getElementsByName('ids')[i].value;
+                                }
+                            }
+                            if(str==''){
+                                bootbox.dialog({
+                                    message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+                                    buttons:
+                                        { "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+                                });
+                                $("#zcheckbox").tips({
+                                    side:1,
+                                    msg1:'点这里全选',
+                                    bg:'#AE81FF',
+                                    time:8
+                                });
+                                return;
+                            }else{
+                                if(msg1 == '确定要删除选中的数据吗?' && msg2 == '请再次确认是否删除选中的数据？？？？'){
+                                    top.jzts();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '<%=basePath%>paper/deleteAll.do?tm='+new Date().getTime(),
+                                        data: {DATA_IDS:str},
+                                        dataType:'json',
+                                        //beforeSend: validateData,
+                                        cache: false,
+                                        success: function(data){
+                                            $.each(data.list, function(i, list){
+                                                tosearch();
+                                            });
+                                        }
+                                    });
+                                }
+                            }
 						}
-					}
+                    })
+
+
 				}
 			});
 		};

@@ -83,9 +83,15 @@
 		<div id="loginbox" >
 			<form action="" method="post" name="loginForm" id="loginForm">
 				<div class="control-group normal_text">
-					<h3>
-						<img src="static/login/logo.png" alt="Logo" />
-					</h3>
+					<br>
+					<div style="color: #00ffff;font-style: oblique; font-family: 'Impact, Charcoal, sans-serif'; font-size: 25px;font-weight: bold">
+						File Management System
+					</div>
+					<br>
+					<div style="font:italic 700 20px/20px arial,sans-serif; color: #cccccc">
+						海淀区妇幼保健院
+					</div>
+
 				</div>
 				<div class="control-group">
 					<div class="controls">
@@ -117,109 +123,109 @@
 				<div class="form-actions">
 					<div style="width:86%;padding-left:8%;">
 
-						<div style="float: left;padding-top:2px;">
-							<i><img src="static/login/yan.png" /></i>
-						</div>
-						<div style="float: left;" class="codediv">
-							<input type="text" name="code" id="code" value="1234" class="login_code"
-								style="height:16px; padding-top:4px;" />
-						</div>
-						<div style="float: left;">
-							<i><img style="height:22px;" id="codeImg" alt="点击更换" title="点击更换" src="" /></i>
-						</div>
-						<c:if test="${pd.isZhuce == 'yes' }">
-						<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(1);" class="btn btn-success">注册</a></span>
-						</c:if>
-						<span class="pull-right"><a onclick="severCheck();" class="flip-link btn btn-info" id="to-recover">登录</a></span>
+						<%--<div style="float: left;padding-top:2px;">--%>
+							<%--<i><img src="static/login/yan.png" /></i>--%>
+						<%--</div>--%>
+						<%--<div style="float: left;" class="codediv">--%>
+							<%--<input type="text" name="code" id="code" value="1234" class="login_code"--%>
+								<%--style="height:16px; padding-top:4px;" />--%>
+						<%--</div>--%>
+						<%--<div style="float: left;">--%>
+							<%--<i><img style="height:22px;" id="codeImg" alt="点击更换" title="点击更换" src="" /></i>--%>
+						<%--</div>--%>
+						<%--<c:if test="${pd.isZhuce == 'yes' }">--%>
+						<%--<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(1);" class="btn btn-success">注册</a></span>--%>
+						<%--</c:if>--%>
+						<span style="width:100%;"><a onclick="severCheck();" class="flip-link btn btn-info" id="to-recover">登录</a></span>
 					</div>
 				</div>
 			</form>
-			<div class="controls">
-				<div class="main_input_box">
-					<font color="white"><span id="nameerr">Copyright © FHqq313596790 2100</span></font>
-				</div>
-			</div>
+			<%--<div class="controls">--%>
+				<%--<div class="main_input_box">--%>
+					<%--<font color="white"><span id="nameerr">Copyright © FHqq313596790 2100</span></font>--%>
+				<%--</div>--%>
+			<%--</div>--%>
 		</div>
 		</div>
 		<!-- 注册 -->
-		<div id="windows2" style="display: none;">
-		<div id="loginbox">
-			<form action="" method="post" name="loginForm" id="loginForm">
-				<div class="control-group normal_text">
-					<h3>
-						<img src="static/login/logo.png" alt="Logo" />
-					</h3>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_lg">
-							<i>用户</i>
-							</span><input type="text" name="USERNAME" id="USERNAME" value="" placeholder="请输入用户名" />
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_ly">
-							<i>密码</i>
-							</span><input type="password" name="PASSWORD" id="PASSWORD" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_ly">
-							<i>重输</i>
-							</span><input type="password" name="chkpwd" id="chkpwd" placeholder="请重新输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_lg">
-							<i>姓名</i>
-							</span><input type="text" name="NAME" id="name" value="" placeholder="请输入姓名" />
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_lg">
-							<i>邮箱</i>
-							</span><input type="text" name="EMAIL" id="EMAIL" value="" placeholder="请输入邮箱" />
-						</div>
-					</div>
-				</div>
-				<div class="form-actions">
-					<div style="width:86%;padding-left:8%;">
+		<%--<div id="windows2" style="display: none;">--%>
+		<%--<div id="loginbox">--%>
+			<%--<form action="" method="post" name="loginForm" id="loginForm">--%>
+				<%--<div class="control-group normal_text">--%>
+					<%--<h3>--%>
+						<%--<img src="static/login/logo.png" alt="Logo" />--%>
+					<%--</h3>--%>
+				<%--</div>--%>
+				<%--<div class="control-group">--%>
+					<%--<div class="controls">--%>
+						<%--<div class="main_input_box">--%>
+							<%--<span class="add-on bg_lg">--%>
+							<%--<i>用户</i>--%>
+							<%--</span><input type="text" name="USERNAME" id="USERNAME" value="" placeholder="请输入用户名" />--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="control-group">--%>
+					<%--<div class="controls">--%>
+						<%--<div class="main_input_box">--%>
+							<%--<span class="add-on bg_ly">--%>
+							<%--<i>密码</i>--%>
+							<%--</span><input type="password" name="PASSWORD" id="PASSWORD" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="control-group">--%>
+					<%--<div class="controls">--%>
+						<%--<div class="main_input_box">--%>
+							<%--<span class="add-on bg_ly">--%>
+							<%--<i>重输</i>--%>
+							<%--</span><input type="password" name="chkpwd" id="chkpwd" placeholder="请重新输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="control-group">--%>
+					<%--<div class="controls">--%>
+						<%--<div class="main_input_box">--%>
+							<%--<span class="add-on bg_lg">--%>
+							<%--<i>姓名</i>--%>
+							<%--</span><input type="text" name="NAME" id="name" value="" placeholder="请输入姓名" />--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="control-group">--%>
+					<%--<div class="controls">--%>
+						<%--<div class="main_input_box">--%>
+							<%--<span class="add-on bg_lg">--%>
+							<%--<i>邮箱</i>--%>
+							<%--</span><input type="text" name="EMAIL" id="EMAIL" value="" placeholder="请输入邮箱" />--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="form-actions">--%>
+					<%--<div style="width:86%;padding-left:8%;">--%>
 
-						<div style="float: left;padding-top:2px;">
-							<i><img src="static/login/yan.png" /></i>
-						</div>
-						<div style="float: left;" class="codediv">
-							<input type="text" name="rcode" id="rcode" class="login_code"
-								style="height:16px; padding-top:4px;" />
-						</div>
-						<div style="float: left;">
-							<i><img style="height:22px;" id="zcodeImg" alt="点击更换" title="点击更换" src="" /></i>
-						</div>
-						<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(2);" class="btn btn-success">取消</a></span>
-						<span class="pull-right"><a onclick="register();" class="flip-link btn btn-info" id="to-recover">提交</a></span>
-					</div>
-				</div>
-			</form>
-			<div class="controls">
-				<div class="main_input_box">
-					<font color="white"><span id="nameerr">Copyright © FHqq313596790 2100</span></font>
-				</div>
-			</div>
-		</div>
-		</div>
+						<%--<div style="float: left;padding-top:2px;">--%>
+							<%--<i><img src="static/login/yan.png" /></i>--%>
+						<%--</div>--%>
+						<%--<div style="float: left;" class="codediv">--%>
+							<%--<input type="text" name="rcode" id="rcode" class="login_code"--%>
+								<%--style="height:16px; padding-top:4px;" />--%>
+						<%--</div>--%>
+						<%--<div style="float: left;">--%>
+							<%--<i><img style="height:22px;" id="zcodeImg" alt="点击更换" title="点击更换" src="" /></i>--%>
+						<%--</div>--%>
+						<%--<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(2);" class="btn btn-success">取消</a></span>--%>
+						<%--<span class="pull-right"><a onclick="register();" class="flip-link btn btn-info" id="to-recover">提交</a></span>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+			<%--</form>--%>
+			<%--<div class="controls">--%>
+				<%--<div class="main_input_box">--%>
+					<%--<font color="white"><span id="nameerr">Copyright © FHqq313596790 2100</span></font>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</div>--%>
+		<%--</div>--%>
 		
 	</div>
 	<div id="templatemo_banner_slide" class="container_wapper">

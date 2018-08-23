@@ -100,9 +100,29 @@ public class FinanceController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
+		String keywords = pd.getString("VOLUME_NAME");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+			StringBuffer sb = new StringBuffer();
+			sb.append("%");
+			char[] chars = keywords.toCharArray();
+			for (char c:chars){
+				sb.append(c);
+				sb.append("%");
+			}
+			String str = sb.toString();
+			pd.put("str",str);
+		}
+		String keyword = pd.getString("COMPANY_NAME");
+		if(null != keyword && !"".equals(keyword)){
+			StringBuffer sb1 = new StringBuffer();
+			sb1.append("%");
+			char[] chars = keyword.toCharArray();
+			for (char c:chars){
+				sb1.append(c);
+				sb1.append("%");
+			}
+			String str1 = sb1.toString();
+			pd.put("str1",str1);
 		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
