@@ -88,8 +88,8 @@
 						File Management System
 					</div>
 					<br>
-					<div style="font:italic 700 20px/20px arial,sans-serif; color: #cccccc">
-						海淀区妇幼保健院
+					<div style="font:700 20px/20px arial,sans-serif; color: #cccccc">
+						北京市海淀区妇幼保健院
 					</div>
 
 				</div>
@@ -98,7 +98,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_lg">
 							<i><img height="37" src="static/login/user.png" /></i>
-							</span><input type="text" name="loginname" id="loginname" value="admin" placeholder="请输入用户名" />
+							</span><input type="text" name="loginname" id="loginname" placeholder="请输入用户名" />
 						</div>
 					</div>
 				</div>
@@ -107,7 +107,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
 							<i><img height="37" src="static/login/suo.png" /></i>
-							</span><input type="password" name="password" id="password" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value="1"/>
+							</span><input type="password" name="password" id="password" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true"/>
 						</div>
 					</div>
 				</div>

@@ -136,14 +136,31 @@ public class FileController extends BaseController {
 			int curPage = Integer.parseInt(currentPage);
 			page.setCurrentPage(curPage);
 		}
-//		System.out.println("33333333333333333333333");
-//		System.out.println(pd);
 		List<PageData>	varList = fileService.list(page);	//列出File列表
+
+		//将关键字变红
+		if (null != keywords && !"".equals(keywords)){
+			for (PageData pageData:varList){
+				String file_name = pageData.getString("NAME");
+				file_name = this.stringToRed(keywords,file_name);
+				pageData.put("NAME",file_name);
+			}
+		}
+
 		mv.setViewName("beta/rolling/file/file_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
+	}
+
+	//关键字变红函数
+	public String stringToRed (String key, String target){
+		char[] chars = key.toCharArray();
+		for (char c:chars){
+			target = target.replaceAll("" + c,"<font color='red'>"+ c +"</font>");
+		}
+		return target;
 	}
 	
 	/**去新增页面

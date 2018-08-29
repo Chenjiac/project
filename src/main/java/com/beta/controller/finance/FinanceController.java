@@ -131,6 +131,16 @@ public class FinanceController extends BaseController {
 			page.setCurrentPage(curPage);
 		}
 		List<PageData>	varList = financeService.list(page);	//列出Finance列表
+
+		//将关键字变红
+		if (null != keywords && !"".equals(keywords)){
+			for (PageData pageData:varList){
+				String finance_name = pageData.getString("VOLUME_NAME");
+				finance_name = this.stringToRed(keywords,finance_name);
+				pageData.put("VOLUME_NAME",finance_name);
+			}
+		}
+
 		mv.setViewName("beta/finances/finance/finance_list");
 //		System.out.println(pd);
 //		System.out.println("---------------------------------");
@@ -138,6 +148,16 @@ public class FinanceController extends BaseController {
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
+	}
+
+
+	//关键字变红函数
+	public String stringToRed (String key, String target){
+		char[] chars = key.toCharArray();
+		for (char c:chars){
+			target = target.replaceAll("" + c,"<font color='red'>"+ c +"</font>");
+		}
+		return target;
 	}
 	
 	/**去新增页面
