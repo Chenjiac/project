@@ -44,8 +44,8 @@
 								<td><input type="text" name="ROOM_NUM" id="ROOM_NUM" value="${pd.ROOM_NUM}" maxlength="32" placeholder="这里输入室编档号" title="室编档号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">管编档号:</td>
-								<td><input type="text" name="LIBRARY_NUM" id="LIBRARY_NUM" value="${pd.LIBRARY_NUM}" maxlength="16" placeholder="这里输入管编档号" title="管编档号" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">馆编档号:</td>
+								<td><input type="text" name="LIBRARY_NUM" id="LIBRARY_NUM" value="${pd.LIBRARY_NUM}" maxlength="16" placeholder="这里输入管编档号" title="管编档号" onblur="hasLN()" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">室编件号:</td>
@@ -144,6 +144,30 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
+
+        //判断档号是否存在
+        function hasLN(){
+            var LIBRARY_NUM = $.trim($("#LIBRARY_NUM").val());
+            $.ajax({
+                type: "POST",
+                url: '<%=basePath%>paper/hasLN.do',
+                data: {LIBRARY_NUM:LIBRARY_NUM,tm:new Date().getTime()},
+                dataType:'json',
+                cache: false,
+                success: function(data){
+                    if("success" != data.result){
+                        $("#LIBRARY_NUM").tips({
+                            side:3,
+                            msg:'馆编档号 '+LIBRARY_NUM+' 已存在',
+                            bg:'#AE81FF',
+                            time:3
+                        });
+                        $("#LIBRARY_NUM").val('');
+                    }
+                }
+            });
+        }
+
 		//保存
 		function save(){
 			if($("#GENERAL_ARCHIVE").val()==""){

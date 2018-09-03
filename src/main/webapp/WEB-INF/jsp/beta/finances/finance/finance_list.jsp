@@ -50,24 +50,17 @@
 										</span>
 									</div>
 								</td>
-								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入保管单位名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="COMPANY_NAME" value="${pd.COMPANY_NAME }" placeholder="这里输入保管单位名称"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-								</td>
 								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>--%>
 								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>--%>
-								<%--<td style="vertical-align:top;padding-left:2px;">--%>
-								 	<%--<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">--%>
-									<%--<option value=""></option>--%>
-									<%--<option value="">全部</option>--%>
-									<%--<option value="">1</option>--%>
-									<%--<option value="">2</option>--%>
-								  	<%--</select>--%>
-								<%--</td>--%>
+								<td style="vertical-align:top;padding-left:2px;">
+								 	<select class="chosen-select form-control" name="STORAGE_TIME" id="STORAGE_TIME" data-placeholder="请选择保管期限" style="vertical-align:top;width: 120px;">
+										<option value=""></option>
+										<option value="">全部</option>
+										<option value="永久" <c:if test="${pd.STORAGE_TIME=='永久'}">selected</c:if>>永久</option>
+										<option value="长期" <c:if test="${pd.STORAGE_TIME=='长期'}">selected</c:if>>长期</option>
+								  	</select>
+								</td>
+
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
@@ -87,12 +80,16 @@
 									<%--<th class="center">财务id</th>--%>
 									<th class="center">全宗号</th>
 									<th class="center">目录号</th>
-									<th class="center">类别</th>
+									<th class="center">案卷号</th>
 									<th class="center">档号</th>
+									<th class="center">顺序号</th>
 									<th class="center">题名</th>
-									<th class="center">起止时间</th>
-									<th class="center">归档年度</th>
+									<th class="center">文号</th>
+									<th class="center">责任者</th>
+									<th class="center">页号</th>
 									<th class="center">页数</th>
+									<th class="center">日期</th>
+									<th class="center">归档年度</th>
 									<th class="center">保管期限</th>
 									<th class="center">密级</th>
 									<th class="center">保管单位名称</th>
@@ -118,10 +115,14 @@
 											<td class='center'>${var.CATALOG_NUMBER}</td>
 											<td class='center'>${var.CATEGORY}</td>
 											<td class='center'>${var.VOLUME_NUM}</td>
+											<td class='center'>${var.VOLUME_SN}</td>
 											<td class='center'><a style="cursor: pointer;text-decoration: none" onclick="openPDF('${var.VOLUME_NUM}');">${var.VOLUME_NAME}</a></td>
-											<td class='center'>${var.VOLUME_START_END_TIME}</td>
-											<td class='center'>${var.VOLUME_YEAR}</td>
+											<td class='center'>${var.FILE_NUM}</td>
+											<td class='center'>${var.RESPONSIBLER}</td>
+											<td class='center'>${var.VOLUME_PAGE}</td>
 											<td class='center'>${var.VOLUME_PAGES}</td>
+											<td class='center'>${var.VOLUME_DATE}</td>
+											<td class='center'>${var.STORAGE_YEAR}</td>
 											<td class='center'>${var.STORAGE_TIME}</td>
 											<td class='center'>${var.SECRET_LEVEL}</td>
 											<td class='center'>${var.COMPANY_NAME}</td>

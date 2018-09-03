@@ -17,7 +17,14 @@ public interface FinanceManager{
 	 * @throws Exception
 	 */
 	public void save(PageData pd)throws Exception;
-	
+
+	/**通过档号获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByVN(PageData pd)throws Exception;
+
 	/**删除
 	 * @param pd
 	 * @throws Exception

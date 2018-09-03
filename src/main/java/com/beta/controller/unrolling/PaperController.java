@@ -58,7 +58,28 @@ public class PaperController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+
+	/**判断馆编档号是否存在
+	 * @return
+	 */
+	@RequestMapping(value="/hasLN")
+	@ResponseBody
+	public Object hasLN(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(paperService.findByLN(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
+	}
+
 	/**删除
 	 * @param out
 	 * @throws Exception
@@ -114,18 +135,18 @@ public class PaperController extends BaseController {
 			String str = sb1.toString();
 			pd.put("str",str);
 		}
-		String keyword = pd.getString("COMPANY_NAME");
-		if (null != keyword && !"".equals(keyword)){
-			StringBuffer sb2 = new StringBuffer();
-			sb2.append("%");
-			char[] chars = keyword.toCharArray();
-			for (char c:chars){
-				sb2.append(c);
-				sb2.append("%");
-			}
-			String str1 = sb2.toString();
-			pd.put("str1",str1);
-		}
+//		String keyword = pd.getString("COMPANY_NAME");
+//		if (null != keyword && !"".equals(keyword)){
+//			StringBuffer sb2 = new StringBuffer();
+//			sb2.append("%");
+//			char[] chars = keyword.toCharArray();
+//			for (char c:chars){
+//				sb2.append(c);
+//				sb2.append("%");
+//			}
+//			String str1 = sb2.toString();
+//			pd.put("str1",str1);
+//		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
 		if (currentPage != null){
@@ -356,6 +377,8 @@ public class PaperController extends BaseController {
 			 * var14：保管单位名称
 			 * var15：备注
 			 */
+//			int count = 0;
+//			String str0 = new String();
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("ROOM_NUM", listPd.get(i).getString("var1"));					//室编档号
@@ -370,6 +393,14 @@ public class PaperController extends BaseController {
 				pd.put("STORAGE_TIME",listPd.get(i).getString("var7"));					//保管期限
 				pd.put("PAPER_NUM",listPd.get(i).getString("var8"));					//文号
 				pd.put("PAPER_NAME",listPd.get(i).getString("var9"));					//题名
+
+//				if((listPd.get(i).getString("var9")).length() > 255){
+//					count++;
+//					str0 += (listPd.get(i).getString("var2"));
+//					continue;
+//				}
+
+
 				pd.put("PAPER_RESPONSIBLER",listPd.get(i).getString("var10"));			//责任者
 				pd.put("PAPER_DATE",listPd.get(i).get("var11").toString());					//日期
 				pd.put("PAPER_PAGE",listPd.get(i).getString("var12"));					//页数
@@ -378,7 +409,12 @@ public class PaperController extends BaseController {
 				pd.put("PAPER_DESCRIPTION",listPd.get(i).getString("var15"));			//备注
 
 				paperService.save(pd);
+
 			}
+//			System.out.println(count);
+//			System.out.println(str0);
+//			mv.addObject("count",count);
+//			mv.addObject("str",str0);
 			/*存入数据库操作======================================*/
 			mv.addObject("msg","success");
 		}

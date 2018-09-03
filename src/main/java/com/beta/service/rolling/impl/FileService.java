@@ -30,7 +30,16 @@ public class FileService implements FileManager {
 	public void save(PageData pd)throws Exception{
 		dao.save("FileMapper.save", pd);
 	}
-	
+	/**通过编号获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findBySN(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("FileMapper.findBySN", pd);
+	}
+
+
 	/**删除
 	 * @param pd
 	 * @throws Exception

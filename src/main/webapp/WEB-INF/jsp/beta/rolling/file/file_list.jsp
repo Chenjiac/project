@@ -50,13 +50,13 @@
 										</span>
 									</div>
 								</td>
-								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入保管单位名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="COMPANY_NAME" value="${pd.COMPANY_NAME }" placeholder="这里输入保管单位名称"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
+								<td style="vertical-align:top;padding-left:2px;">
+									<select class="chosen-select form-control" name="STORAGE_TIME" id="STORAGE_TIME" data-placeholder="请选择保管期限" style="vertical-align:top;width: 120px;">
+										<option value=""></option>
+										<option value="">全部</option>
+										<option value="永久" <c:if test="${pd.STORAGE_TIME=='永久'}">selected</c:if>>永久</option>
+										<option value="长期" <c:if test="${pd.STORAGE_TIME=='长期'}">selected</c:if>>长期</option>
+									</select>
 								</td>
 								<%--&lt;%&ndash;<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>&ndash;%&gt;--%>
 								<%--&lt;%&ndash;<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>&ndash;%&gt;--%>
@@ -115,7 +115,7 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}，${var.VOLUME_NUM}，${var.FILE_SN}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<%--<td class='center'>${var.FILE_ID}</td>--%>
@@ -221,6 +221,9 @@
 									<c:if test="${QX.del == 1 }">
 									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?','请再次确认是否删除选中的数据？？？？');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
 									</c:if>
+									<a class="btn btn-xs btn-success" title="下载" onclick="downloadAll('确定下载选中的PDF文档吗？')">
+										<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>
+									</a>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -475,6 +478,54 @@
             };
             diag.show();
         }
+
+        //批量操作
+        function downloadAll(msg){
+            bootbox.confirm(msg, function(result) {
+                if(result) {
+                    var arr = new Array();
+                    for(var i=0;i < document.getElementsByName('ids').length;i++){
+                        if(document.getElementsByName('ids')[i].checked){
+                            arr.push(document.getElementsByName('ids')[i].value);
+                        }
+                    }
+					var str = JSON.stringify(arr);
+					console.log(str);
+                    if(arr.length == 0){
+                        bootbox.dialog({
+                            message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+                            buttons:
+                                { "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+                        });
+                        $("#zcheckbox").tips({
+                            side:1,
+                            msg:'点这里全选',
+                            bg:'#AE81FF',
+                            time:8
+                        });
+                        return;
+                    }else{
+                        if(msg == '确定下载选中的PDF文档吗？'){
+                            top.jzts();
+                            $.ajax({
+                                type: "POST",
+                                url: '<%=basePath%>file/downloadAll.do',
+                                data: {DATA:str},
+                                dataType:'json',
+                                //beforeSend: validateData,
+                                cache: false,
+                                success: function(data){
+                                    $.each(data.list, function(i, list){
+                                        nextPage(${page.currentPage});
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        };
+
 	</script>
 
 

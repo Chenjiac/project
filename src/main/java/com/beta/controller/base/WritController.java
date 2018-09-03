@@ -47,19 +47,19 @@ public class WritController extends BaseController {
             String str = sb1.toString();
             pd.put("str",str);
         }
-        String keyword = pd.getString("COMPANY_NAME");
-        if (null != keyword && !"".equals(keyword)){
-            StringBuffer sb2 = new StringBuffer();
-            sb2.append("%");
-            char[] chars = keyword.toCharArray();
-            for (char c:chars){
-                sb2.append(c);
-                sb2.append("%");
-            }
-            String str1 = sb2.toString();
-//			System.out.println(str2);
-            pd.put("str1",str1);
-        }
+//        String keyword = pd.getString("COMPANY_NAME");
+//        if (null != keyword && !"".equals(keyword)){
+//            StringBuffer sb2 = new StringBuffer();
+//            sb2.append("%");
+//            char[] chars = keyword.toCharArray();
+//            for (char c:chars){
+//                sb2.append(c);
+//                sb2.append("%");
+//            }
+//            String str1 = sb2.toString();
+////			System.out.println(str2);
+//            pd.put("str1",str1);
+//        }
         page.setPd(pd);
         List<PageData> varList = fileService.listW(page);	//列出search列表
 

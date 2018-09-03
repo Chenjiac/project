@@ -21,10 +21,16 @@
 	<div id="zhongxin"></div>
 	<script type="text/javascript">
 		var msg = "${msg}";
+		<%--var count = "${count}";--%>
+		<%--var str = "${str}";--%>
+		<%--if (count > 0 ){--%>
+		    <%--alert(str);--%>
+		<%--}--%>
 		if(msg=="success" || msg==""){
 			document.getElementById('zhongxin').style.display = 'none';
 		}
 		top.Dialog.close();
+
 	</script>
 </body>
 </html>

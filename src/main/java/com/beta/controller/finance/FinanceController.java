@@ -112,18 +112,18 @@ public class FinanceController extends BaseController {
 			String str = sb.toString();
 			pd.put("str",str);
 		}
-		String keyword = pd.getString("COMPANY_NAME");
-		if(null != keyword && !"".equals(keyword)){
-			StringBuffer sb1 = new StringBuffer();
-			sb1.append("%");
-			char[] chars = keyword.toCharArray();
-			for (char c:chars){
-				sb1.append(c);
-				sb1.append("%");
-			}
-			String str1 = sb1.toString();
-			pd.put("str1",str1);
-		}
+//		String keyword = pd.getString("COMPANY_NAME");
+//		if(null != keyword && !"".equals(keyword)){
+//			StringBuffer sb1 = new StringBuffer();
+//			sb1.append("%");
+//			char[] chars = keyword.toCharArray();
+//			for (char c:chars){
+//				sb1.append(c);
+//				sb1.append("%");
+//			}
+//			String str1 = sb1.toString();
+//			pd.put("str1",str1);
+//		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
 		if (currentPage != null){
@@ -173,7 +173,28 @@ public class FinanceController extends BaseController {
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
-	}	
+	}
+
+	/**判断档号是否存在
+	 * @return
+	 */
+	@RequestMapping(value="/hasVN")
+	@ResponseBody
+	public Object hasVN(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(financeService.findByVN(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
+	}
 	
 	 /**去修改页面
 	 * @param
@@ -233,16 +254,20 @@ public class FinanceController extends BaseController {
 //		titles.add("财务id");	//1
 		titles.add("全宗号");	//2
 		titles.add("目录号");	//3
-		titles.add("类别");	//4
+		titles.add("案卷号");	//4
 		titles.add("档号");	//5
-		titles.add("题名");	//6
-		titles.add("起止时间");	//7
-		titles.add("归档年度");	//8
-		titles.add("页数");	//9
-		titles.add("保管期限");	//10
-		titles.add("密级");	//11
-		titles.add("保管单位名称");	//12
-		titles.add("备注");	//13
+		titles.add("顺序号");   //6
+		titles.add("题名");	//7
+		titles.add("文号");	//8
+		titles.add("责任者");   //9
+		titles.add("页号");   //10
+		titles.add("页数");	//11
+		titles.add("日期");  //12
+		titles.add("归档年度"); //13
+		titles.add("保管期限");	//14
+		titles.add("密级");	    //15
+		titles.add("保管单位名称");	//16
+		titles.add("备注");	//17
 		dataMap.put("titles", titles);
 		List<PageData> varOList = financeService.listAll(pd);
 		List<PageData> varList = new ArrayList<PageData>();
@@ -253,14 +278,18 @@ public class FinanceController extends BaseController {
 			vpd.put("var2", varOList.get(i).getString("CATALOG_NUMBER"));	    //3
 			vpd.put("var3", varOList.get(i).getString("CATEGORY"));	    //4
 			vpd.put("var4", varOList.get(i).getString("VOLUME_NUM"));	    //5
-			vpd.put("var5", varOList.get(i).getString("VOLUME_NAME"));	    //6
-			vpd.put("var6", varOList.get(i).getString("VOLUME_START_END_TIME"));	    //7
-			vpd.put("var7", varOList.get(i).getString("VOLUME_YEAR"));	    //8
-			vpd.put("var8", varOList.get(i).getString("VOLUME_PAGES"));	    //9
-			vpd.put("var9", varOList.get(i).getString("STORAGE_TIME"));	    //10
-			vpd.put("var10", varOList.get(i).getString("SECRET_LEVEL"));	    //11
-			vpd.put("var11", varOList.get(i).getString("COMPANY_NAME"));	    //12
-			vpd.put("var12", varOList.get(i).getString("DESCRIPTION"));	//13
+			vpd.put("var5", varOList.get(i).getString("VOLUME_SN"));	    //6
+			vpd.put("var6", varOList.get(i).getString("VOLUME_NAME"));	    //7
+			vpd.put("var7", varOList.get(i).getString("FILE_NUM"));	    //8
+			vpd.put("var8", varOList.get(i).getString("RESPONSIBLER"));	    //9
+			vpd.put("var9", varOList.get(i).getString("VOLUME_PAGE"));	    //10
+			vpd.put("var10", varOList.get(i).getString("VOLUME_PAGES"));	    //11
+			vpd.put("var11", varOList.get(i).getString("VOLUME_DATE"));	    //12
+			vpd.put("var12", varOList.get(i).getString("STORAGE_YEAR"));	//13
+			vpd.put("var12", varOList.get(i).getString("STORAGE_TIME"));	//14
+			vpd.put("var12", varOList.get(i).getString("SECRET_LEVEL"));	//15
+			vpd.put("var12", varOList.get(i).getString("COMPANY_NAME"));	//16
+			vpd.put("var12", varOList.get(i).getString("DESCRIPTION"));	//17
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
@@ -306,7 +335,7 @@ public class FinanceController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "financeexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 1, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间
@@ -319,39 +348,41 @@ public class FinanceController extends BaseController {
 			/**
 			 * var0 :全宗号
 			 * var1 :目录号
-			 * var2 :类别
+			 * var2 :案卷号
 			 * var3 :档号
-			 * var4 :题名
-			 * var5 ：起止时间
-			 * var6 ：归档年度
-			 * var7 ：页数
-			 * var8： 保管期限
-			 * var9 ：密级
-			 * var10：保管单位名称
-			 * var11：备注
+			 * var4 :顺序号
+			 * var5 :题名
+			 * var6：文号
+			 * var7：责任者
+			 * var8：页号
+			 * var9 ：页数
+			 * var10：日期
+			 * var11 ：归档年度
+			 * var12：保管期限
+			 * var13：密级
+			 * var14：保管单位名称
+			 * var15：备注
 			 */
-
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("CATALOG_NUMBER", listPd.get(i).getString("var1"));				//目录号
-				pd.put("CATEGORY",listPd.get(i).getString("var2"));							//类别
-
+				pd.put("CATEGORY",listPd.get(i).getString("var2"));						//案卷号
 				pd.put("VOLUME_NUM",listPd.get(i).getString("var3"));					//档号
 				if (financeService.findByNum(pd) != null){
 					continue;
 				}
-				pd.put("VOLUME_NAME",listPd.get(i).getString("var4"));					//题名
-//				System.out.println(pd);
-//				if(fileService.findByFName(pd) != null){
-//					continue;
-//				}
-				pd.put("VOLUME_START_END_TIME",listPd.get(i).getString("var5"));		//起止时间
-				pd.put("VOLUME_YEAR",listPd.get(i).getString("var6"));						//归档年度
-				pd.put("VOLUME_PAGES",listPd.get(i).getString("var7"));			//页数
-				pd.put("STORAGE_TIME",listPd.get(i).getString("var8"));					//保管期限
-				pd.put("SECRET_LEVEL",listPd.get(i).getString("var9"));					//密级
-				pd.put("COMPANY_NAME",listPd.get(i).getString("var10"));					//保管单位名称
-				pd.put("DESCRIPTION",listPd.get(i).getString("var11"));				//备注
+				pd.put("VOLUME_SN",listPd.get(i).getString("var4"));                    //顺序号
+				pd.put("VOLUME_NAME",listPd.get(i).getString("var5"));					//题名
+				pd.put("FILE_NUM",listPd.get(i).getString("var6"));		//档号
+				pd.put("RESPONSIBLER",listPd.get(i).getString("var7"));						//责任者
+				pd.put("VOLUME_PAGE",listPd.get(i).getString("var8"));
+				pd.put("VOLUME_PAGES",listPd.get(i).getString("var9"));			//页数
+				pd.put("VOLUME_DATE",listPd.get(i).getString("var10"));					//日期
+				pd.put("STORAGE_YEAR",listPd.get(i).getString("var11"));
+				pd.put("STORAGE_TIME",listPd.get(i).getString("var12"));
+				pd.put("SECRET_LEVEL",listPd.get(i).getString("var13"));					//密级
+				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));					//保管单位名称
+				pd.put("DESCRIPTION",listPd.get(i).getString("var15"));				//备注
 
 				financeService.save(pd);
 			}

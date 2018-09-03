@@ -40,12 +40,17 @@
 								<td><input type="text" name="CATALOG_NUMBER" id="CATALOG_NUMBER" value="${pd.CATALOG_NUMBER}" maxlength="12" placeholder="这里输入目录号" title="目录号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">类别:</td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">案卷号:</td>
 								<td><input type="text" name="CATEGORY" id="CATEGORY" value="${pd.CATEGORY}" maxlength="12" placeholder="这里输入类别" title="类别" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">档号:</td>
-								<td><input type="text" name="VOLUME_NUM" id="VOLUME_NUM" value="${pd.VOLUME_NUM}" maxlength="32" placeholder="这里输入档号" title="档号" style="width:98%;"/></td>
+								<td><input type="text" name="VOLUME_NUM" id="VOLUME_NUM" value="${pd.VOLUME_NUM}" maxlength="32" placeholder="这里输入档号" title="档号" onblur="hasVN()" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">顺序号:</td>
+								<td><input type="text" name="VOLUME_SN" id="VOLUME_SN" value="${pd.VOLUME_SN}" maxlength="32" placeholder="这里输入顺序号" title="顺序号" style="width:98%;"/></td>
+
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">题名:</td>
@@ -54,16 +59,30 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">起止时间:</td>
-								<td><input type="text" name="VOLUME_START_END_TIME" id="VOLUME_START_END_TIME" value="${pd.VOLUME_START_END_TIME}" maxlength="24" placeholder="这里输入起止时间" title="起止时间" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">文号:</td>
+								<td><input type="text" name="FILE_NUM" id="FILE_NUM" value="${pd.FILE_NUM}" maxlength="32" placeholder="这里输入文号" title="文号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">归档年度:</td>
-								<td><input type="text" name="VOLUME_YEAR" id="VOLUME_YEAR" value="${pd.VOLUME_YEAR}" maxlength="4" placeholder="这里输入归档年度" title="归档年度" style="width:98%;"/></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">责任者:</td>
+								<td><input type="text" name="RESPONSIBLER" id="RESPONSIBLER" value="${pd.RESPONSIBLER}" maxlength="24" placeholder="这里输入责任者" title="责任者" style="width:98%;"/></td>
+							</tr>
+
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">页号:</td>
+								<td><input type="text" name="VOLUME_PAGE" id="VOLUME_PAGE" value="${pd.VOLUME_PAGE}" maxlength="6" placeholder="这里输入页号" title="页号" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">页数:</td>
 								<td><input type="text" name="VOLUME_PAGES" id="VOLUME_PAGES" value="${pd.VOLUME_PAGES}" maxlength="6" placeholder="这里输入页数" title="页数" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">日期:</td>
+								<td><input type="text" name="VOLUME_DATE" id="VOLUME_DATE" value="${pd.VOLUME_DATE}" maxlength="6" placeholder="这里输入日期" title="日期" style="width:98%;"/></td>
+
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">归档年度:</td>
+								<td><input type="text" name="VOLUME_YEAR" id="VOLUME_YEAR" value="${pd.VOLUME_YEAR}" maxlength="4" placeholder="这里输入归档年度" title="归档年度" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">保管期限:</td>
@@ -123,6 +142,33 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
+
+        //判断档号是否存在
+        function hasVN(){
+            var VOLUME_NUM = $.trim($("#VOLUME_NUM").val());
+            $.ajax({
+                type: "POST",
+                url: '<%=basePath%>finance/hasVN.do',
+                data: {VOLUME_NUM:VOLUME_NUM,tm:new Date().getTime()},
+                dataType:'json',
+                cache: false,
+                success: function(data){
+                    if("success" != data.result){
+                        $("#VOLUME_NUM").tips({
+                            side:3,
+                            msg:'档号 '+VOLUME_NUM+' 已存在',
+                            bg:'#AE81FF',
+                            time:3
+                        });
+                        $("#VOLUME_NUM").val('');
+                    }
+                }
+            });
+        }
+
+
+
+
 		//保存
 		function save(){
 

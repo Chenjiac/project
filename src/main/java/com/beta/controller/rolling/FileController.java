@@ -1,7 +1,6 @@
 package com.beta.controller.rolling;
 
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,11 +11,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.beta.service.rolling.FileManager;
-import com.fh.entity.system.Role;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.util.*;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -62,7 +61,28 @@ public class FileController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+
+	/**判断编码是否存在
+	 * @return
+	 */
+	@RequestMapping(value="/hasSN")
+	@ResponseBody
+	public Object hasSN(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(fileService.findBySN(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
+	}
+
 	/**删除
 	 * @param out
 	 * @throws Exception
@@ -116,20 +136,20 @@ public class FileController extends BaseController {
 				str += c;
 				str += "%";
 			}
-			System.out.println(str);
+//			System.out.println(str);
 			pd.put("str",str);
 		}
-		String keyword = pd.getString("COMPANY_NAME");
-		if(null != keyword && !"".equals(keyword)){
-//			pd.put("COMPANY_NAME",keyword.trim());
-			char[] chars = keyword.toCharArray();
-			String str1 = "%";
-			for (char c:chars){
-				str1 += c;
-				str1 += "%";
-			}
-			pd.put("str1",str1);
-		}
+//		String keyword = pd.getString("COMPANY_NAME");
+//		if(null != keyword && !"".equals(keyword)){
+////			pd.put("COMPANY_NAME",keyword.trim());
+//			char[] chars = keyword.toCharArray();
+//			String str1 = "%";
+//			for (char c:chars){
+//				str1 += c;
+//				str1 += "%";
+//			}
+//			pd.put("str1",str1);
+//		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
 		if (currentPage != null){
@@ -237,6 +257,57 @@ public class FileController extends BaseController {
 		map.put("list", pdList);
 		return AppUtil.returnObject(pd, map);
 	}
+
+	/**批量下载
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/downloadAll")
+	@ResponseBody
+	public void downloadAll(HttpServletResponse response) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "批量下载PDF");
+		PageData pd = new PageData();
+//		Map<String, Object> map = new HashMap<String, Object>();
+		pd = this.getPageData();
+//		List<PageData> pdList = new ArrayList<PageData>();
+		String DATA = pd.getString("DATA");
+		JSONArray platformList = JSON.parseArray(DATA);
+		Object[] arr = platformList.toArray();
+		for (Object temp : arr) {
+			String str = temp.toString();
+			String volume_num = str.substring(str.indexOf("，") + 1, str.lastIndexOf("，"));
+			String file_sn = str.substring(str.lastIndexOf("，") + 1, str.length());
+//			System.out.println(volume_num);
+//			System.out.println(file_sn);
+			pd.put("VOLUME_NUM", volume_num);
+			pd.put("FILE_SN", file_sn);
+			List<PageData> files = fileService.findByNum(pd);
+			if (files.size() == 1) {
+				FileDownload.fileDownload(response, "H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + ".pdf", volume_num + ".pdf");
+//				url = "/uploadFiles/uploadFile/"+ pd.getString("VOLUME_NUM") + ".pdf";
+			} else if (files.size() > 1) {
+				FileDownload.fileDownload(response, "H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + "-" + file_sn + ".pdf", volume_num + "-" + file_sn + ".pdf");
+			}
+//				url = "/uploadFiles/uploadFile/"+ pd.getString("VOLUME_NUM") + "-" +pd.getString("FILE_SN") +".pdf";
+//			}
+
+		}
+	}
+
+
+//		if(null != DATA_IDS && !"".equals(DATA_IDS)){
+//			String ArrayDATA_IDS[] = DATA_IDS.split(",");
+////			fileService.deleteAll(ArrayDATA_IDS);
+//			pd.put("msg", "ok");
+//		}else{
+//			pd.put("msg", "no");
+//		}
+//		pdList.add(pd);
+//		map.put("list", pdList);
+//		return AppUtil.returnObject(pd, map);
+//	}
+
+
 	
 	 /**导出到excel
 	 * @param
@@ -334,7 +405,7 @@ public class FileController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "fileexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 1, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第2行开始；0:从第A列开始；0:第1个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第2行开始；0:从第A列开始；0:第1个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间
@@ -424,6 +495,7 @@ public class FileController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		System.out.println(pd);
 		String url="";
 		List<PageData> files = fileService.findByNum(pd);
 		if(files.size() == 1){
