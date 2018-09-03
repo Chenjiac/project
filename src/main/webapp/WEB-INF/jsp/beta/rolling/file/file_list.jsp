@@ -50,6 +50,14 @@
 										</span>
 									</div>
 								</td>
+								<td style="vertical-align:top;padding-left:2px;">
+									<select class="chosen-select form-control" name="STORAGE_TIME" id="STORAGE_TIME" data-placeholder="请选择保管期限" style="vertical-align:top;width: 120px;">
+										<option value=""></option>
+										<option value="">全部</option>
+										<option value="永久" <c:if test="${pd.STORAGE_TIME=='永久'}">selected</c:if>>永久</option>
+										<option value="长期" <c:if test="${pd.STORAGE_TIME=='长期'}">selected</c:if>>长期</option>
+									</select>
+								</td>
 								<%--&lt;%&ndash;<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>&ndash;%&gt;--%>
 								<%--&lt;%&ndash;<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>&ndash;%&gt;--%>
 								<%--&lt;%&ndash;<td style="vertical-align:top;padding-left:2px;">&ndash;%&gt;--%>
@@ -93,6 +101,7 @@
 									<th class="center">密级</th>
 									<th class="center">保管单位名称</th>
 									<th class="center">备注</th>
+									<th class="center">预览</th>
 									<%--<th class="center">案卷id</th>--%>
 									<th class="center">操作</th>
 								</tr>
@@ -106,7 +115,7 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}，${var.VOLUME_NUM}，${var.FILE_SN}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<%--<td class='center'>${var.FILE_ID}</td>--%>
@@ -115,7 +124,8 @@
 											<td class='center'>${var.VOLUME_SN}</td>
 											<td class='center'>${var.VOLUME_NUM}</td>
 											<td class='center'>${var.FILE_SN}</td>
-											<td class='center'>${var.NAME}</td>
+											<%--<td class='center'>${var.NAME}</td>--%>
+											<td class="center"><a style="cursor: pointer; text-decoration: none;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}')">${var.NAME}</a></td>
 											<td class='center'>${var.NUM}</td>
 											<td class='center'>${var.RES}</td>
 											<td class='center'>${var.START_PAGE}</td>
@@ -126,6 +136,9 @@
 											<td class='center'>${var.SECRET_LEVEL}</td>
 											<td class='center'>${var.COMPANY_NAME}</td>
 											<td class='center'>${var.DES}</td>
+											<td class="center">
+												<button style="cursor:pointer; width: 40px;height: 24px;font-size: 12px;line-height: 24px;vertical-align: middle" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}');" title="预览">预览</button>
+											</td>
 											<%--<td class='center'>${var.VOLUME_ID}</td>--%>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
@@ -169,13 +182,13 @@
 																</a>
 															</li>
 															</c:if>
-															<li>
-																<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}');" class="tooltip-success" data-rel="tooltip" title="预览">
-																	<span class="green">
-																		<i class="ace-icon fa fa-eye pink"></i>
-																	</span>
-																</a>
-															</li>
+															<%--<li>--%>
+																<%--<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}','${var.FILE_SN}');" class="tooltip-success" data-rel="tooltip" title="预览">--%>
+																	<%--<span class="green">--%>
+																		<%--<i class="ace-icon fa fa-eye pink"></i>--%>
+																	<%--</span>--%>
+																<%--</a>--%>
+															<%--</li>--%>
 														</ul>
 													</div>
 												<%--</div>--%>
@@ -206,8 +219,11 @@
 									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
 									</c:if>
 									<c:if test="${QX.del == 1 }">
-									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
+									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?','请再次确认是否删除选中的数据？？？？');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
 									</c:if>
+									<a class="btn btn-xs btn-success" title="下载" onclick="downloadAll('确定下载选中的PDF文档吗？')">
+										<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>
+									</a>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -324,20 +340,36 @@
 			 };
 			 diag.show();
 		}
-		
-		//删除
-		function del(Id){
-			bootbox.confirm("确定要删除吗?", function(result) {
-				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>file/delete.do?FILE_ID="+Id+"&tm="+new Date().getTime();
-					$.get(url,function(data){
-						tosearch();
-					});
-				}
-			});
-		}
-		
+
+        //删除
+        <%--function del(Id){--%>
+            <%--bootbox.confirm("确定要删除吗?", function(result) {--%>
+                <%--if(result) {--%>
+                    <%--top.jzts();--%>
+                    <%--var url = "<%=basePath%>file/delete.do?FILE_ID="+Id+"&tm="+new Date().getTime();--%>
+                    <%--$.get(url,function(data){--%>
+                        <%--tosearch();--%>
+                    <%--});--%>
+                <%--}--%>
+            <%--});--%>
+        <%--}--%>
+
+        function del(Id) {
+            bootbox.confirm("确定要删除吗？",function (result) {
+                if(result == true){
+                    bootbox.confirm("请再次确认是否删除？？？",function (res) {
+                        if (res){
+                            top.jzts();
+                            var url = "<%=basePath%>file/delete.do?FILE_ID="+Id+"&tm="+new Date().getTime();
+                            $.get(url,function (data) {
+                                tosearch();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
 		//修改
 		function edit(Id){
 			 top.jzts();
@@ -360,48 +392,52 @@
 		}
 		
 		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
+		function makeAll(msg1,msg2){
+			bootbox.confirm(msg1, function(result) {
 				if(result) {
-					var str = '';
-                    for(var i=0;i < document.getElementsByName('ids').length;i++){
-                        if(document.getElementsByName('ids')[i].checked){
-                            if(str=='') str += document.getElementsByName('ids')[i].value;
-                            else str += ',' + document.getElementsByName('ids')[i].value;
-                        }
-                    }
-					//alert(str);
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>file/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											tosearch();
-									 });
-								}
-							});
+				    bootbox.confirm(msg2,function (res) {
+						if (res){
+                            var str = '';
+                            for(var i=0;i < document.getElementsByName('ids').length;i++){
+                                if(document.getElementsByName('ids')[i].checked){
+                                    if(str=='') str += document.getElementsByName('ids')[i].value;
+                                    else str += ',' + document.getElementsByName('ids')[i].value;
+                                }
+                            }
+                            if(str==''){
+                                bootbox.dialog({
+                                    message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+                                    buttons:
+                                        { "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+                                });
+                                $("#zcheckbox").tips({
+                                    side:1,
+                                    msg1:'点这里全选',
+                                    bg:'#AE81FF',
+                                    time:8
+                                });
+                                return;
+                            }else{
+                                if(msg1 == '确定要删除选中的数据吗?' && msg2 == '请再次确认是否删除选中的数据？？？？'){
+                                    top.jzts();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '<%=basePath%>file/deleteAll.do?tm='+new Date().getTime(),
+                                        data: {DATA_IDS:str},
+                                        dataType:'json',
+                                        //beforeSend: validateData,
+                                        cache: false,
+                                        success: function(data){
+                                            $.each(data.list, function(i, list){
+                                                tosearch();
+                                            });
+                                        }
+                                    });
+                                }
+                            }
 						}
-					}
+                    })
+
 				}
 			});
 		};
@@ -442,6 +478,54 @@
             };
             diag.show();
         }
+
+        //批量操作
+        function downloadAll(msg){
+            bootbox.confirm(msg, function(result) {
+                if(result) {
+                    var arr = new Array();
+                    for(var i=0;i < document.getElementsByName('ids').length;i++){
+                        if(document.getElementsByName('ids')[i].checked){
+                            arr.push(document.getElementsByName('ids')[i].value);
+                        }
+                    }
+					var str = JSON.stringify(arr);
+					console.log(str);
+                    if(arr.length == 0){
+                        bootbox.dialog({
+                            message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+                            buttons:
+                                { "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+                        });
+                        $("#zcheckbox").tips({
+                            side:1,
+                            msg:'点这里全选',
+                            bg:'#AE81FF',
+                            time:8
+                        });
+                        return;
+                    }else{
+                        if(msg == '确定下载选中的PDF文档吗？'){
+                            top.jzts();
+                            $.ajax({
+                                type: "POST",
+                                url: '<%=basePath%>file/downloadAll.do',
+                                data: {DATA:str},
+                                dataType:'json',
+                                //beforeSend: validateData,
+                                cache: false,
+                                success: function(data){
+                                    $.each(data.list, function(i, list){
+                                        nextPage(${page.currentPage});
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        };
+
 	</script>
 
 

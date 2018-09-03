@@ -289,6 +289,7 @@
 	//判断编码是否存在
 	function hasN(USERNAME){
 		var NUMBER = $.trim($("#NUMBER").val());
+		alert(USERNAME);
 		$.ajax({
 			type: "POST",
 			url: '<%=basePath%>user/hasN.do',

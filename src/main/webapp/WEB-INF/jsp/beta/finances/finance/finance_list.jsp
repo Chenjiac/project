@@ -37,21 +37,30 @@
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" placeholder="这里输入题名" class="nav-search-input" id="nav-search-input" autocomplete="off" name="VOLUME_NAME" value="${pd.VOLUME_NAME }" placeholder="这里输入题名"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+									</div>
+								</td>
+								<td>
+									<div class="nav-search">
+										<span class="input-icon">
+											<input type="text" placeholder="这里输入归档年度" class="nav-search-input" id="nav-search-input" autocomplete="off" name="VOLUME_YEAR" value="${pd.VOLUME_YEAR }" placeholder="这里输入归档年度"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
 								</td>
 								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>--%>
 								<%--<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>--%>
-								<%--<td style="vertical-align:top;padding-left:2px;">--%>
-								 	<%--<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">--%>
-									<%--<option value=""></option>--%>
-									<%--<option value="">全部</option>--%>
-									<%--<option value="">1</option>--%>
-									<%--<option value="">2</option>--%>
-								  	<%--</select>--%>
-								<%--</td>--%>
+								<td style="vertical-align:top;padding-left:2px;">
+								 	<select class="chosen-select form-control" name="STORAGE_TIME" id="STORAGE_TIME" data-placeholder="请选择保管期限" style="vertical-align:top;width: 120px;">
+										<option value=""></option>
+										<option value="">全部</option>
+										<option value="永久" <c:if test="${pd.STORAGE_TIME=='永久'}">selected</c:if>>永久</option>
+										<option value="长期" <c:if test="${pd.STORAGE_TIME=='长期'}">selected</c:if>>长期</option>
+								  	</select>
+								</td>
+
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
@@ -71,17 +80,22 @@
 									<%--<th class="center">财务id</th>--%>
 									<th class="center">全宗号</th>
 									<th class="center">目录号</th>
-									<th class="center">类别</th>
+									<th class="center">案卷号</th>
 									<th class="center">档号</th>
+									<th class="center">顺序号</th>
 									<th class="center">题名</th>
-									<th class="center">起止时间</th>
-									<th class="center">归档年度</th>
+									<th class="center">文号</th>
+									<th class="center">责任者</th>
+									<th class="center">页号</th>
 									<th class="center">页数</th>
+									<th class="center">日期</th>
+									<th class="center">归档年度</th>
 									<th class="center">保管期限</th>
 									<th class="center">密级</th>
 									<th class="center">保管单位名称</th>
 									<th class="center">备注</th>
 									<th class="center">操作</th>
+									<th class="center">预览</th>
 								</tr>
 							</thead>
 													
@@ -101,32 +115,44 @@
 											<td class='center'>${var.CATALOG_NUMBER}</td>
 											<td class='center'>${var.CATEGORY}</td>
 											<td class='center'>${var.VOLUME_NUM}</td>
-											<td class='center'>${var.VOLUME_NAME}</td>
-											<td class='center'>${var.VOLUME_START_END_TIME}</td>
-											<td class='center'>${var.VOLUME_YEAR}</td>
+											<td class='center'>${var.VOLUME_SN}</td>
+											<td class='center'><a style="cursor: pointer;text-decoration: none" onclick="openPDF('${var.VOLUME_NUM}');">${var.VOLUME_NAME}</a></td>
+											<td class='center'>${var.FILE_NUM}</td>
+											<td class='center'>${var.RESPONSIBLER}</td>
+											<td class='center'>${var.VOLUME_PAGE}</td>
 											<td class='center'>${var.VOLUME_PAGES}</td>
+											<td class='center'>${var.VOLUME_DATE}</td>
+											<td class='center'>${var.STORAGE_YEAR}</td>
 											<td class='center'>${var.STORAGE_TIME}</td>
 											<td class='center'>${var.SECRET_LEVEL}</td>
 											<td class='center'>${var.COMPANY_NAME}</td>
 											<td class='center'>${var.DESCRIPTION}</td>
 											<td class="center">
+												<button style="cursor:pointer; width: 40px;height: 24px;font-size: 12px;line-height: 24px;vertical-align: middle" onclick="openPDF('${var.VOLUME_NUM}');" title="预览">预览</button>
+											</td>
+											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
 												</c:if>
-												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.FINANCE_ID}');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
-													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.FINANCE_ID}');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-													</a>
-													</c:if>
-													<%--<a href="finance_attachment/list.do?FINANCE_ID=${var.FINANCE_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>--%>
-												</div>
-												<div class="hidden-md hidden-lg">
+												<%--<div class="hidden-sm hidden-xs btn-group">--%>
+													<%--<c:if test="${QX.edit == 1 }">--%>
+													<%--<a class="btn btn-xs btn-success" style="width: 35%;" title="编辑" onclick="edit('${var.FINANCE_ID}');">--%>
+														<%--<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>--%>
+													<%--</a>--%>
+													<%--</c:if>--%>
+													<%--<c:if test="${QX.del == 1 }">--%>
+													<%--<a class="btn btn-xs btn-danger" style="width: 35%" onclick="del('${var.FINANCE_ID}');">--%>
+														<%--<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>--%>
+													<%--</a>--%>
+													<%--</c:if>--%>
+													<%--<a style="cursor:pointer;height: 26px;background-color:#00a2d4;" onclick="openPDF('${var.VOLUME_NUM}');" class="tooltip-success" data-rel="tooltip" title="预览">--%>
+														<%--<span class="green">--%>
+															<%--<i class="ace-icon fa fa-eye pink"></i>--%>
+														<%--</span>--%>
+													<%--</a>--%>
+													<%--&lt;%&ndash;<a href="finance_attachment/list.do?FINANCE_ID=${var.FINANCE_ID}" style="display: inline-block;text-decoration: none; width: 40px; height: 26px;background-color:#ccc;font-size: 13px; color: darkmagenta;line-height:26px;text-align: center" title="附件" >附件</a>&ndash;%&gt;--%>
+												<%--</div>--%>
+												<%--<div class="hidden-md hidden-lg">--%>
 													<div class="inline pos-rel">
 														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
 															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
@@ -151,9 +177,16 @@
 																</a>
 															</li>
 															</c:if>
+															<%--<li>--%>
+																<%--<a style="cursor:pointer;" onclick="openPDF('${var.VOLUME_NUM}');" class="tooltip-success" data-rel="tooltip" title="预览">--%>
+																	<%--<span class="green">--%>
+																		<%--<i class="ace-icon fa fa-eye pink"></i>--%>
+																	<%--</span>--%>
+																<%--</a>--%>
+															<%--</li>--%>
 														</ul>
 													</div>
-												</div>
+												<%--</div>--%>
 											</td>
 										</tr>
 									
@@ -181,7 +214,7 @@
 									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
 									</c:if>
 									<c:if test="${QX.del == 1 }">
-									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
+									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?','请再次确认是否删除选中的数据？？？？');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
 									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -301,17 +334,21 @@
 		}
 		
 		//删除
-		function del(Id){
-			bootbox.confirm("确定要删除吗?", function(result) {
-				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>finance/delete.do?FINANCE_ID="+Id+"&tm="+new Date().getTime();
-					$.get(url,function(data){
-						tosearch();
-					});
-				}
-			});
-		}
+        function del(Id) {
+            bootbox.confirm("确定要删除吗？",function (result) {
+                if(result == true){
+                    bootbox.confirm("请再次确认是否删除？？？",function (res) {
+                        if (res){
+                            top.jzts();
+                            var url = "<%=basePath%>finance/delete.do?FINANCE_ID="+Id+"&tm="+new Date().getTime();
+                            $.get(url,function (data) {
+                                tosearch();
+                            });
+                        }
+                    });
+                }
+            });
+        }
 		
 		//修改
 		function edit(Id){
@@ -333,49 +370,59 @@
 			 };
 			 diag.show();
 		}
+
+		function openPDF(num) {
+            var url="/uploadFiles/uploadFile/"+ num +".pdf";
+            window.open("pdfjs/web/viewer.html?file="+url);
+        }
 		
 		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
+		function makeAll(msg1,msg2){
+			bootbox.confirm(msg1, function(result) {
 				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>finance/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											tosearch();
-									 });
-								}
-							});
+				    bootbox.confirm(msg2,function (res) {
+						if (res){
+                            var str = '';
+                            for(var i=0;i < document.getElementsByName('ids').length;i++){
+                                if(document.getElementsByName('ids')[i].checked){
+                                    if(str=='') str += document.getElementsByName('ids')[i].value;
+                                    else str += ',' + document.getElementsByName('ids')[i].value;
+                                }
+                            }
+                            if(str==''){
+                                bootbox.dialog({
+                                    message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+                                    buttons:
+                                        { "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+                                });
+                                $("#zcheckbox").tips({
+                                    side:1,
+                                    msg1:'点这里全选',
+                                    bg:'#AE81FF',
+                                    time:8
+                                });
+                                return;
+                            }else{
+                                if(msg1 == '确定要删除选中的数据吗?' && msg2 == '请再次确认是否删除选中的数据？？？？'){
+                                    top.jzts();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '<%=basePath%>finance/deleteAll.do?tm='+new Date().getTime(),
+                                        data: {DATA_IDS:str},
+                                        dataType:'json',
+                                        //beforeSend: validateData,
+                                        cache: false,
+                                        success: function(data){
+                                            $.each(data.list, function(i, list){
+                                                tosearch();
+                                            });
+                                        }
+                                    });
+                                }
+                            }
 						}
-					}
+                    })
+
 				}
 			});
 		};

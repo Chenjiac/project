@@ -29,6 +29,15 @@ public class FinanceService implements FinanceManager {
 	public void save(PageData pd)throws Exception{
 		dao.save("FinanceMapper.save", pd);
 	}
+
+	/**通过档号获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByVN(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("FinanceMapper.findByVN", pd);
+	}
 	
 	/**删除
 	 * @param pd
@@ -71,7 +80,16 @@ public class FinanceService implements FinanceManager {
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("FinanceMapper.findById", pd);
 	}
-	
+
+	/**通过VOLUME_NUM查找数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByNum(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("FinanceMapper.findByNum",pd);
+	}
+
+
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception

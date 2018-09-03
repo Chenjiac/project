@@ -52,6 +52,7 @@
 									<c:forEach items="${roleList}" var="role">
 										<option value="${role.ROLE_ID }" <c:if test="${pd.ROLE_ID==role.ROLE_ID}">selected</c:if>>${role.ROLE_NAME }</option>
 									</c:forEach>
+										<%--<option value="${role.ROLE_ID }" <c:if test="${pd.ROLE_ID==role.ROLE_ID}">selected</c:if>>${role.ROLE_NAME }</option>--%>
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">

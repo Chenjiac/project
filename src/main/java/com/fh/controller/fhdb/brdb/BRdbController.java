@@ -51,9 +51,10 @@ public class BRdbController extends BaseController {
 	@RequestMapping(value="/listAllTable")
 	public ModelAndView listAllTable() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"列出所有表");
-		if(!Jurisdiction.buttonJurisdiction(menuUrlb, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+//		if(!Jurisdiction.buttonJurisdiction(menuUrlb, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		Object[] arrOb = DbFH.getTables();
+		System.out.println(arrOb);
 		List<String> tblist = (List<String>)arrOb[1];
 		mv.setViewName("fhdb/brdb/table_list");
 		mv.addObject("varList", tblist);			//所有表

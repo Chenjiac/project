@@ -29,7 +29,16 @@ public class PaperService implements PaperManager {
 	public void save(PageData pd)throws Exception{
 		dao.save("PaperMapper.save", pd);
 	}
-	
+
+	/**通过馆编档号获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByLN(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("PaperMapper.findByLN", pd);
+	}
+
 	/**删除
 	 * @param pd
 	 * @throws Exception

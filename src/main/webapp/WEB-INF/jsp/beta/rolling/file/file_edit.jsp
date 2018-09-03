@@ -53,7 +53,7 @@
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">顺序号:</td>
-								<td><input type="number" name="FILE_SN" id="FILE_SN" value="${pd.FILE_SN}" maxlength="32" placeholder="这里输入顺序号" title="顺序号" style="width:98%;"/></td>
+								<td><input type="number" name="FILE_SN" id="FILE_SN" value="${pd.FILE_SN}" maxlength="32" placeholder="这里输入顺序号" title="顺序号" onblur="hasSN('${pd.VOLUME_NUM}')" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">题名:</td>
@@ -146,6 +146,33 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
+
+        //判断档号是否存在
+        function hasSN(VOLUME_NUM){
+            var FILE_SN = $.trim($("#FILE_SN").val());
+            var VOLUME_NUM = $.trim($("#VOLUME_NUM").val());
+            $.ajax({
+                type: "POST",
+                url: '<%=basePath%>file/hasSN.do',
+                data: {FILE_SN:FILE_SN,VOLUME_NUM:VOLUME_NUM,tm:new Date().getTime()},
+                dataType:'json',
+                cache: false,
+                success: function(data){
+                    if("success" != data.result){
+                        $("#FILE_SN").tips({
+                            side:3,
+                            msg:'该档号下的顺序号 '+FILE_SN+' 已存在',
+                            bg:'#AE81FF',
+                            time:3
+                        });
+                        $("#FILE_SN").val('');
+                    }
+                }
+            });
+        }
+
+
+
 		//保存
 		function save(){
 //			if($("#FILE_ID").val()==""){
@@ -201,7 +228,7 @@
 			if($("#FILE_SN").val()==""){
 				$("#FILE_SN").tips({
 					side:3,
-		            msg:'请输入顺序号',
+//		            msg:'请输入顺序号',
 		            bg:'#AE81FF',
 		            time:2
 		        });

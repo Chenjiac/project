@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-
-import com.beta.service.base.SectionManager;
 import com.beta.service.unrolling.PaperManager;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.util.*;
@@ -40,8 +38,6 @@ public class PaperController extends BaseController {
 	String menuUrl = "paper/list.do"; //菜单地址(权限用)
 	@Resource(name="paperService")
 	private PaperManager paperService;
-	@Resource(name = "sectionService")
-	private SectionManager sectionService;
 	@Resource(name="fhlogService")
 	private FHlogManager FHLOG;
 	
@@ -62,7 +58,28 @@ public class PaperController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+
+	/**判断馆编档号是否存在
+	 * @return
+	 */
+	@RequestMapping(value="/hasLN")
+	@ResponseBody
+	public Object hasLN(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(paperService.findByLN(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
+	}
+
 	/**删除
 	 * @param out
 	 * @throws Exception
@@ -106,10 +123,30 @@ public class PaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
+		String keywords = pd.getString("NAME");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+			StringBuffer sb1 = new StringBuffer();
+			sb1.append("%");
+			char[] chars = keywords.toCharArray();
+			for (char c:chars){
+				sb1.append(c);
+				sb1.append("%");
+			}
+			String str = sb1.toString();
+			pd.put("str",str);
 		}
+//		String keyword = pd.getString("COMPANY_NAME");
+//		if (null != keyword && !"".equals(keyword)){
+//			StringBuffer sb2 = new StringBuffer();
+//			sb2.append("%");
+//			char[] chars = keyword.toCharArray();
+//			for (char c:chars){
+//				sb2.append(c);
+//				sb2.append("%");
+//			}
+//			String str1 = sb2.toString();
+//			pd.put("str1",str1);
+//		}
 		page.setPd(pd);
 		String currentPage = pd.getString("currentPage");
 		if (currentPage != null){
@@ -117,13 +154,30 @@ public class PaperController extends BaseController {
 			page.setCurrentPage(curPage);
 		}
 		List<PageData>	varList = paperService.list(page);	//列出Paper列表
-//		List<PageData>  sectionList = sectionService.list(page);//列出Section列表
+
+		//将关键字变红
+		if (null != keywords && !"".equals(keywords)){
+			for (PageData pageData:varList){
+				String file_name = pageData.getString("NAME");
+				file_name = this.stringToRed(keywords,file_name);
+				pageData.put("NAME",file_name);
+			}
+		}
+
 		mv.setViewName("beta/unrolling/paper/paper_list");
 		mv.addObject("varList", varList);
-//		mv.addObject("sectionList",sectionList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
+	}
+
+	//关键字变红函数
+	public String stringToRed (String key, String target){
+		char[] chars = key.toCharArray();
+		for (char c:chars){
+			target = target.replaceAll("" + c,"<font color='red'>"+ c +"</font>");
+		}
+		return target;
 	}
 	
 	/**去新增页面
@@ -135,9 +189,7 @@ public class PaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		List<PageData> sectionList = sectionService.list(page);
 		mv.setViewName("beta/unrolling/paper/paper_edit");
-		mv.addObject("sectionList",sectionList);
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -153,9 +205,7 @@ public class PaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = paperService.findById(pd);	//根据ID读取
-//		List<PageData> sectionList = sectionService.list(page);
 		mv.setViewName("beta/unrolling/paper/paper_edit");
-//		mv.addObject("sectionList",sectionList);
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;
@@ -299,7 +349,7 @@ public class PaperController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "paperexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 2);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
 			/*存入数据库操作======================================*/
 //			pd.put("RIGHTS", "");					//权限
 //			pd.put("LAST_LOGIN", "");				//最后登录时间
@@ -327,6 +377,8 @@ public class PaperController extends BaseController {
 			 * var14：保管单位名称
 			 * var15：备注
 			 */
+//			int count = 0;
+//			String str0 = new String();
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("ROOM_NUM", listPd.get(i).getString("var1"));					//室编档号
@@ -341,15 +393,28 @@ public class PaperController extends BaseController {
 				pd.put("STORAGE_TIME",listPd.get(i).getString("var7"));					//保管期限
 				pd.put("PAPER_NUM",listPd.get(i).getString("var8"));					//文号
 				pd.put("PAPER_NAME",listPd.get(i).getString("var9"));					//题名
+
+//				if((listPd.get(i).getString("var9")).length() > 255){
+//					count++;
+//					str0 += (listPd.get(i).getString("var2"));
+//					continue;
+//				}
+
+
 				pd.put("PAPER_RESPONSIBLER",listPd.get(i).getString("var10"));			//责任者
 				pd.put("PAPER_DATE",listPd.get(i).get("var11").toString());					//日期
 				pd.put("PAPER_PAGE",listPd.get(i).getString("var12"));					//页数
 				pd.put("SECRET_LEVEL",listPd.get(i).getString("var13"));				//密级
-//				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
+				pd.put("COMPANY_NAME",listPd.get(i).getString("var14"));				//保管单位名称
 				pd.put("PAPER_DESCRIPTION",listPd.get(i).getString("var15"));			//备注
 
 				paperService.save(pd);
+
 			}
+//			System.out.println(count);
+//			System.out.println(str0);
+//			mv.addObject("count",count);
+//			mv.addObject("str",str0);
 			/*存入数据库操作======================================*/
 			mv.addObject("msg","success");
 		}
