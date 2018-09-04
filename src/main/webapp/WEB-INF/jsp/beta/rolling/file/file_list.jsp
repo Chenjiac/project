@@ -115,7 +115,7 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}，${var.VOLUME_NUM}，${var.FILE_SN}" class="ace" /><span class="lbl"></span></label>
+												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<%--<td class='center'>${var.FILE_ID}</td>--%>
@@ -506,20 +506,21 @@
                         return;
                     }else{
                         if(msg == '确定下载选中的PDF文档吗？'){
-                            top.jzts();
-                            $.ajax({
-                                type: "POST",
-                                url: '<%=basePath%>file/downloadAll.do',
-                                data: {DATA:str},
-                                dataType:'json',
-                                //beforeSend: validateData,
-                                cache: false,
-                                success: function(data){
-                                    $.each(data.list, function(i, list){
-                                        nextPage(${page.currentPage});
-                                    });
-                                }
-                            });
+                            window.location.href='<%=basePath%>file/downloadAll.do?DATA=' + arr;
+                            <%--top.jzts();--%>
+                            <%--$.ajax({--%>
+                                <%--type: "POST",--%>
+                                <%--url: '<%=basePath%>file/downloadAll.do',--%>
+                                <%--data: {DATA:str},--%>
+                                <%--dataType:'json',--%>
+                                <%--//beforeSend: validateData,--%>
+                                <%--cache: false,--%>
+                                <%--success: function(data){--%>
+                                    <%--$.each(data.list, function(i, list){--%>
+                                        <%--nextPage(${page.currentPage});--%>
+                                    <%--});--%>
+                                <%--}--%>
+                            <%--});--%>
                         }
                     }
                 }

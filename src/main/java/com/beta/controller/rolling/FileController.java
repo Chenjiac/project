@@ -1,6 +1,6 @@
 package com.beta.controller.rolling;
 
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,9 +8,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.beta.service.rolling.FileManager;
@@ -136,7 +139,6 @@ public class FileController extends BaseController {
 				str += c;
 				str += "%";
 			}
-//			System.out.println(str);
 			pd.put("str",str);
 		}
 //		String keyword = pd.getString("COMPANY_NAME");
@@ -253,8 +255,11 @@ public class FileController extends BaseController {
 		}else{
 			pd.put("msg", "no");
 		}
+//		System.out.println(pd);
 		pdList.add(pd);
+		System.out.println(pdList);
 		map.put("list", pdList);
+//		System.out.println(map);
 		return AppUtil.returnObject(pd, map);
 	}
 
@@ -264,51 +269,91 @@ public class FileController extends BaseController {
 	 */
 	@RequestMapping(value="/downloadAll")
 	@ResponseBody
-	public void downloadAll(HttpServletResponse response) throws Exception {
+	public Object downloadAll(HttpServletResponse response) throws Exception {
+//		System.out.println("--------------");
 		logBefore(logger, Jurisdiction.getUsername() + "批量下载PDF");
 		PageData pd = new PageData();
-//		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		pd = this.getPageData();
-//		List<PageData> pdList = new ArrayList<PageData>();
+		List<PageData> pdList = new ArrayList<PageData>();
 		String DATA = pd.getString("DATA");
-		JSONArray platformList = JSON.parseArray(DATA);
-		Object[] arr = platformList.toArray();
-		for (Object temp : arr) {
-			String str = temp.toString();
-			String volume_num = str.substring(str.indexOf("，") + 1, str.lastIndexOf("，"));
-			String file_sn = str.substring(str.lastIndexOf("，") + 1, str.length());
-//			System.out.println(volume_num);
-//			System.out.println(file_sn);
-			pd.put("VOLUME_NUM", volume_num);
-			pd.put("FILE_SN", file_sn);
-			List<PageData> files = fileService.findByNum(pd);
-			if (files.size() == 1) {
-				FileDownload.fileDownload(response, "H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + ".pdf", volume_num + ".pdf");
-//				url = "/uploadFiles/uploadFile/"+ pd.getString("VOLUME_NUM") + ".pdf";
-			} else if (files.size() > 1) {
-				FileDownload.fileDownload(response, "H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + "-" + file_sn + ".pdf", volume_num + "-" + file_sn + ".pdf");
+		//需要压缩的文件地址
+		if (DATA.contains(",")) {
+			String[] data = DATA.split(",");
+			StringBuffer sb = new StringBuffer();
+			for (String str : data) {
+				int id = Integer.parseInt(str);
+				pd.put("FILE_ID", id);
+				PageData fileInfo = fileService.findById(pd);
+				String volume_num = fileInfo.getString("VOLUME_NUM");
+				pd.put("VOLUME_NUM", volume_num);
+				String file_sn = fileInfo.getString("FILE_SN");
+				List<PageData> files = fileService.findByNum(pd);
+				if (files.size() == 1) {
+					sb.append("H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + ".pdf" + "。");
+				} else if (files.size() > 1) {
+					sb.append("H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + "-" + file_sn + ".pdf" + "。");
+				}
+				pdList.add(pd);
+				System.out.println(pdList);
+				map.put("list", pdList);
 			}
-//				url = "/uploadFiles/uploadFile/"+ pd.getString("VOLUME_NUM") + "-" +pd.getString("FILE_SN") +".pdf";
-//			}
+			String str = sb.toString();
+			String[] path = str.split("。");
+
+
+			// 要生成的压缩文件地址和文件名称
+			String desPath = "H:\\DownLoad.zip";
+			File zipFile = new File(desPath);
+			ZipOutputStream zipStream = null;
+			FileInputStream zipSource = null;
+			BufferedInputStream bufferStream = null;
+			try {
+				//构造最终压缩包的输出流
+				zipStream = new ZipOutputStream(new FileOutputStream(zipFile));
+				for (int i = 0; i < path.length; i++) {
+					File file = new File(path[i]);
+					//将需要压缩的文件格式化为输入流
+					zipSource = new FileInputStream(file);
+					//压缩条目不是具体独立的文件，而是压缩包文件列表中的列表项，称为条目，就像索引一样
+					ZipEntry zipEntry = new ZipEntry(file.getName());
+					//定位该压缩条目位置，开始写入文件到压缩包中
+					zipStream.putNextEntry(zipEntry);
+
+					//输入缓冲流
+					bufferStream = new BufferedInputStream(zipSource, 1024 * 10);
+					int read = 0;
+					//创建读写缓冲区
+					byte[] buf = new byte[1024 * 10];
+					while ((read = bufferStream.read(buf, 0, 1024 * 10)) != -1) {
+						zipStream.write(buf, 0, read);
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				//关闭流
+				try {
+					if (null != bufferStream) bufferStream.close();
+					if (null != zipStream) zipStream.close();
+					if (null != zipSource) zipSource.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
 		}
+//		System.out.println(pd);
+
+
+
+//		System.out.println(map);
+		return AppUtil.returnObject(pd, map);
+
 	}
 
 
-//		if(null != DATA_IDS && !"".equals(DATA_IDS)){
-//			String ArrayDATA_IDS[] = DATA_IDS.split(",");
-////			fileService.deleteAll(ArrayDATA_IDS);
-//			pd.put("msg", "ok");
-//		}else{
-//			pd.put("msg", "no");
-//		}
-//		pdList.add(pd);
-//		map.put("list", pdList);
-//		return AppUtil.returnObject(pd, map);
-//	}
-
-
-	
 	 /**导出到excel
 	 * @param
 	 * @throws Exception
@@ -397,7 +442,6 @@ public class FileController extends BaseController {
 	public ModelAndView readExcel(
 			@RequestParam(value="excel",required=false) MultipartFile file
 	) throws Exception{
-//		System.out.println("---------------读取excel----------------");
 //		FHLOG.save(Jurisdiction.getUsername(), "从EXCEL导入到数据库");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -433,7 +477,6 @@ public class FileController extends BaseController {
 			 * var14：保管单位名称
 			 * var15：备注
 			 */
-//			System.out.println("-------------开始读取-----------------");
 			for(int i=0;i<listPd.size();i++){
 				pd.put("GENERAL_ARCHIVE", listPd.get(i).getString("var0"));				//全宗号
 				pd.put("CATALOG_NUMBER", listPd.get(i).getString("var1"));				//目录号
@@ -441,7 +484,6 @@ public class FileController extends BaseController {
 
 				pd.put("VOLUME_NUM",listPd.get(i).getString("var3"));					//档号
 				pd.put("FILE_SN",listPd.get(i).getString("var4"));						//顺序号
-				System.out.println(pd);
 				if(fileService.findByFName(pd) != null){
 					continue;
 				}
@@ -495,7 +537,6 @@ public class FileController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		System.out.println(pd);
 		String url="";
 		List<PageData> files = fileService.findByNum(pd);
 		if(files.size() == 1){

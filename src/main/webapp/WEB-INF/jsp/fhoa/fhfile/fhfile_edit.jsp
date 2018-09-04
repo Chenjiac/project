@@ -148,7 +148,8 @@
 				},
 				'onAllComplete' : function(event,data) {
 					//alert(str);	//全部上传完毕执行
-					$("#FILEPATH").val(str);
+					$("#" +
+						"").val(str);
 					$("#Form").submit();
 					$("#zhongxin").hide();
 					$("#zhongxin2").show();

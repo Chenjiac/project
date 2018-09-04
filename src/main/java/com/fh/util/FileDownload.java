@@ -20,20 +20,20 @@ public class FileDownload {
 	 * @param fileName		//下载后看到的文件名
 	 * @return  文件名
 	 */
-	public static void fileDownload(final HttpServletResponse response, String filePath, String fileName) throws Exception{  
-		   
-		byte[] data = FileUtil.toByteArray2(filePath);  
-	    fileName = URLEncoder.encode(fileName, "UTF-8");  
+	public static void fileDownload(final HttpServletResponse response, String filePath, String fileName) throws Exception{
+		System.out.println(filePath);
+		System.out.println(fileName);
+		byte[] data = FileUtil.toByteArray2(filePath);
+		fileName = URLEncoder.encode(fileName, "UTF-8");
 	    response.reset();  
 	    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");  
 	    response.addHeader("Content-Length", "" + data.length);  
 	    response.setContentType("application/octet-stream;charset=UTF-8");  
 	    OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());  
 	    outputStream.write(data);  
-	    outputStream.flush();  
+	    outputStream.flush();
 	    outputStream.close();
 	    response.flushBuffer();
-	    
-	} 
+	}
 
 }
