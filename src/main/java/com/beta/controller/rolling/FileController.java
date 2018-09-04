@@ -269,7 +269,7 @@ public class FileController extends BaseController {
 	 */
 	@RequestMapping(value="/downloadAll")
 	@ResponseBody
-	public Object downloadAll(HttpServletResponse response) throws Exception {
+	public ResponseEntity<byte[]> downloadAll(HttpServletRequest request) throws Exception {
 //		System.out.println("--------------");
 		logBefore(logger, Jurisdiction.getUsername() + "批量下载PDF");
 		PageData pd = new PageData();
@@ -307,7 +307,6 @@ public class FileController extends BaseController {
 			File zipFile = new File(desPath);
 			ZipOutputStream zipStream = null;
 			FileInputStream zipSource = null;
-			BufferedInputStream bufferStream = null;
 			try {
 				//构造最终压缩包的输出流
 				zipStream = new ZipOutputStream(new FileOutputStream(zipFile));
@@ -319,30 +318,28 @@ public class FileController extends BaseController {
 					ZipEntry zipEntry = new ZipEntry(file.getName());
 					//定位该压缩条目位置，开始写入文件到压缩包中
 					zipStream.putNextEntry(zipEntry);
+					int temp = 0;
+					while ((temp = zipSource.read()) != -1) {
+						zipStream.write(temp);
+					}
 
-					//输入缓冲流
-					bufferStream = new BufferedInputStream(zipSource, 1024 * 10);
-					int read = 0;
-					//创建读写缓冲区
-					byte[] buf = new byte[1024 * 10];
-					while ((read = bufferStream.read(buf, 0, 1024 * 10)) != -1) {
-						zipStream.write(buf, 0, read);
+					try {
+						if (null != bufferStream) bufferStream.close();
+						if (null != zipSource) zipSource.close();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
-
+				zipStream.close();
+				File file = new File("D:/"+resourcesName);
+				HttpHeaders headers = new HttpHeaders();
+				String filename = new String(resourcesName.getBytes("utf-8"),"iso-8859-1");
+				headers.setContentDispositionFormData("attachment", filename);
+				headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+				return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				//关闭流
-				try {
-					if (null != bufferStream) bufferStream.close();
-					if (null != zipStream) zipStream.close();
-					if (null != zipSource) zipSource.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
-
 		}
 //		System.out.println(pd);
 
