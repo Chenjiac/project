@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.druid.sql.visitor.functions.If;
@@ -19,7 +20,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.beta.service.rolling.FileManager;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.util.*;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -273,9 +279,9 @@ public class FileController extends BaseController {
 //		System.out.println("--------------");
 		logBefore(logger, Jurisdiction.getUsername() + "批量下载PDF");
 		PageData pd = new PageData();
-		Map<String, Object> map = new HashMap<String, Object>();
+//		Map<String, Object> map = new HashMap<String, Object>();
 		pd = this.getPageData();
-		List<PageData> pdList = new ArrayList<PageData>();
+//		List<PageData> pdList = new ArrayList<PageData>();
 		String DATA = pd.getString("DATA");
 		//需要压缩的文件地址
 		if (DATA.contains(",")) {
@@ -294,17 +300,17 @@ public class FileController extends BaseController {
 				} else if (files.size() > 1) {
 					sb.append("H:\\Project\\project\\target\\MVNFHM\\uploadFiles\\uploadFile\\" + volume_num + "-" + file_sn + ".pdf" + "。");
 				}
-				pdList.add(pd);
-				System.out.println(pdList);
-				map.put("list", pdList);
+//				pdList.add(pd);
+//				System.out.println(pdList);
+//				map.put("list", pdList);
 			}
 			String str = sb.toString();
 			String[] path = str.split("。");
 
 
 			// 要生成的压缩文件地址和文件名称
-			String desPath = "H:\\DownLoad.zip";
-			File zipFile = new File(desPath);
+			String resourcesName = "DownLoad.zip";
+			File zipFile = new File("H:/" + resourcesName);
 			ZipOutputStream zipStream = null;
 			FileInputStream zipSource = null;
 			try {
@@ -324,30 +330,25 @@ public class FileController extends BaseController {
 					}
 
 					try {
-						if (null != bufferStream) bufferStream.close();
+//						if (null != bufferStream) bufferStream.close();
 						if (null != zipSource) zipSource.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 				zipStream.close();
-				File file = new File("D:/"+resourcesName);
+				File file = new File("H:/"+resourcesName);
 				HttpHeaders headers = new HttpHeaders();
 				String filename = new String(resourcesName.getBytes("utf-8"),"iso-8859-1");
 				headers.setContentDispositionFormData("attachment", filename);
 				headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-				return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
+				return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers, HttpStatus.CREATED);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-//		System.out.println(pd);
 
-
-
-//		System.out.println(map);
-		return AppUtil.returnObject(pd, map);
-
+		return null;
 	}
 
 
