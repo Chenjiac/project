@@ -324,7 +324,7 @@ public class FileController extends BaseController {
 					}
 
 					try {
-						if (null != bufferStream) bufferStream.close();
+					
 						if (null != zipSource) zipSource.close();
 					} catch (IOException e) {
 						e.printStackTrace();
